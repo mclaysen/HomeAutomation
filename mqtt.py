@@ -1,4 +1,3 @@
-from turtle import home
 import json
 import paho.mqtt.client as paho
 
