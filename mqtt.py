@@ -1,7 +1,7 @@
 from turtle import home
 import paho.mqtt.client as paho
 
-def on_message(client, userdata, message):
+def on_message_dte(client, userdata, message):
     print("received message =",str(message.payload.decode("utf-8")))
     powerData = message.payload.decode("utf-8")
     homeassistantclient.publish("energy/meter",powerData, retain= True)
@@ -22,6 +22,6 @@ def connect_dte(clientid):
 
 homeassistantclient = connect_homeassistant("client-1")
 rtlclient = connect_dte("client-1")
-rtlclient.on_message=on_message
+rtlclient.on_message=on_message_dte
 rtlclient.subscribe("event/metering/#")
 rtlclient.loop_forever()
