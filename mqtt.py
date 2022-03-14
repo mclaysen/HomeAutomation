@@ -9,7 +9,12 @@ def on_message_rtl(client, userdata, message):
     tempData = message.payload.decode("utf-8")
     decodedTempData =json.loads(tempData)
     if decodedTempData["id"]==5161:
-        homeassistantclient.publish("rtl_433/basement",message.payload)#publish
+        homeassistantclient.publish("rtl_433/basement",message.payload)
+    elif(decodedTempData["id"]==15881):
+        homeassistantclient.publish("rtl_433/main_floor",message.payload)
+    elif(decodedTempData["id"]==8386):
+        homeassistantclient.publish("rtl_433/attic",message.payload)
+        
 
 def connect_homeassistant(clientid):
     homeassistantip="192.168.86.78"
@@ -31,14 +36,14 @@ def connect_rtl(clientid):
     client.connect(rtl_ip, 1883)
     return client
 
-homeassistantclient = connect_homeassistant("client-1")
+homeassistantclient = connect_homeassistant("client-0")
 
 dteclient = connect_dte("client-1")
 dteclient.on_message=on_message_dte
 dteclient.subscribe("event/metering/#")
 dteclient.loop_start()
 
-rtlclient = connect_rtl("client-1")
+rtlclient = connect_rtl("client-2")
 rtlclient.on_message = on_message_rtl
 rtlclient.subscribe("rtl_433/localhost/events")
 rtlclient.loop_forever()
