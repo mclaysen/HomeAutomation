@@ -3,7 +3,11 @@ import paho.mqtt.client as paho
 
 def on_message_dte(client, userdata, message):
     powerData = message.payload.decode("utf-8")
-    homeassistantclient.publish("energy/meter",powerData, retain= True)
+    decodedEnergyData = json.loads(powerData)
+    if "type" not in decodedEnergyData:
+        homeassistantclient.publish("energy/meter/instant",powerData)
+    else:
+        homeassistantclient.publish("energy/meter/summary",powerData)
 
 def on_message_rtl(client, userdata, message):
     tempData = message.payload.decode("utf-8")
