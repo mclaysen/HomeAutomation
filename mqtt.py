@@ -22,6 +22,10 @@ def on_message_rtl(client, userdata, message):
         homeassistantclient.publish("rtl_433/attic",message.payload)
     elif(decodedpayload["id"]==30409):
         homeassistantclient.publish("rtl_433/door_sensor",message.payload)
+        
+def connect_homeassistant(clientid):
+    homeassistantip="192.168.86.78"
+    print("connecting to home assistant", homeassistantip)
     homeassistantclient = paho.Client(clientid)
     homeassistantclient.username_pw_set("mqtt","snapple15")
     homeassistantclient.connect(homeassistantip)
