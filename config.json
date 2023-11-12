@@ -1,0 +1,10 @@
+{
+    "DTE_IP": "192.168.2.190",
+    "RTL_IP": "192.168.86.211",
+    "SensorIDs": {
+        "basement": 5161,
+        "main_floor": 15881,
+        "attic": 8386,
+        "door_sensor": 30409
+    }
+}
