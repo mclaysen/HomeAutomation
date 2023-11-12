@@ -35,7 +35,7 @@ def connect_dte(clientid):
     return client
 
 def connect_rtl(clientid):
-    rtl_ip = "localhost"
+    rtl_ip = "192.168.86.211"
     client = paho.Client(clientid)
     client.connect(rtl_ip, 1883)
     return client
@@ -49,5 +49,5 @@ dteclient.loop_start()
 
 rtlclient = connect_rtl("client-2")
 rtlclient.on_message = on_message_rtl
-rtlclient.subscribe("rtl_433/localhost/events")
+rtlclient.subscribe("rtl_433/raspberrypi/events/#")
 rtlclient.loop_forever()
