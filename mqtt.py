@@ -4,25 +4,24 @@ import paho.mqtt.client as paho
 def on_message_dte(client, userdata, message):
     powerData = message.payload.decode("utf-8")
     decodedEnergyData = json.loads(powerData)
+    print(decodedEnergyData)
     if "type" not in decodedEnergyData:
         homeassistantclient.publish("energy/meter/instant",powerData)
     else:
         homeassistantclient.publish("energy/meter/summary",powerData)
 
 def on_message_rtl(client, userdata, message):
-    tempData = message.payload.decode("utf-8")
-    decodedTempData =json.loads(tempData)
-    if decodedTempData["id"]==5161:
+    payload = message.payload.decode("utf-8")
+    decodedpayload =json.loads(payload)
+    print(decodedpayload)
+    if decodedpayload["id"]==5161:
         homeassistantclient.publish("rtl_433/basement",message.payload)
-    elif(decodedTempData["id"]==15881):
+    elif(decodedpayload["id"]==15881):
         homeassistantclient.publish("rtl_433/main_floor",message.payload)
-    elif(decodedTempData["id"]==8386):
+    elif(decodedpayload["id"]==8386):
         homeassistantclient.publish("rtl_433/attic",message.payload)
-        
-
-def connect_homeassistant(clientid):
-    homeassistantip="192.168.86.78"
-    print("connecting to home assistant", homeassistantip)
+    elif(decodedpayload["id"]==30409):
+        homeassistantclient.publish("rtl_433/door_sensor",message.payload)
     homeassistantclient = paho.Client(clientid)
     homeassistantclient.username_pw_set("mqtt","snapple15")
     homeassistantclient.connect(homeassistantip)
