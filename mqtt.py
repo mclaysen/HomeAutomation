@@ -3,6 +3,7 @@ import paho.mqtt.client as paho
 import signal
 import sys
 import configparser
+from models.temp_sensor import SensorData
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -21,15 +22,15 @@ def on_message_dte(client, userdata, message):
 
 def on_message_rtl(client, userdata, message):
     payload = message.payload.decode("utf-8")
-    decodedpayload =json.loads(payload)
-    print(decodedpayload)
-    if decodedpayload["id"]==5161:
+    decodedpayload = SensorData.from_dict(json.loads(payload))
+    print(decodedpayload.id)
+    if decodedpayload.id==5161:
         homeassistantclient.publish("rtl_433/basement",message.payload)
-    elif(decodedpayload["id"]==15881):
+    elif(decodedpayload.id==15881):
         homeassistantclient.publish("rtl_433/main_floor",message.payload)
-    elif(decodedpayload["id"]==8386):
+    elif(decodedpayload.id==8386):
         homeassistantclient.publish("rtl_433/attic",message.payload)
-    elif(decodedpayload["id"]==30409):
+    elif(decodedpayload.id==30409):
         homeassistantclient.publish("rtl_433/door_sensor",message.payload)
         
 def connect_homeassistant(clientid):
