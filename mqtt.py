@@ -4,12 +4,14 @@ import signal
 import sys
 import configparser
 from models.temp_sensor import SensorData
+from models.sensorMappings import Config
 
 config = configparser.ConfigParser()
 config.read('config.ini')
 
 with open('config.json') as f:
-    appsettings = json.load(f)
+    data = json.load(f)
+    appsettings = Config.from_dict(data)
 
 def on_message_dte(client, userdata, message):
     powerData = message.payload.decode("utf-8")
@@ -23,15 +25,10 @@ def on_message_dte(client, userdata, message):
 def on_message_rtl(client, userdata, message):
     payload = message.payload.decode("utf-8")
     decodedpayload = SensorData.from_dict(json.loads(payload))
-    print(decodedpayload.id)
-    if decodedpayload.id==5161:
-        homeassistantclient.publish("rtl_433/basement",message.payload)
-    elif(decodedpayload.id==15881):
-        homeassistantclient.publish("rtl_433/main_floor",message.payload)
-    elif(decodedpayload.id==8386):
-        homeassistantclient.publish("rtl_433/attic",message.payload)
-    elif(decodedpayload.id==30409):
-        homeassistantclient.publish("rtl_433/door_sensor",message.payload)
+
+    for sensor in appsettings.sensorMappings:
+        if sensor.id == decodedpayload.id:
+            homeassistantclient.publish("rtl_433/"+sensor.name,message.payload)
         
 def connect_homeassistant(clientid):
     homeassistantip="192.168.86.78"
@@ -45,12 +42,12 @@ def connect_homeassistant(clientid):
 
 def connect_dte(clientid):
     client= paho.Client(clientid)
-    dte_ip = appsettings.get("DTE_IP")
+    dte_ip = appsettings.DTE_IP
     client.connect(dte_ip, 2883)
     return client
 
 def connect_rtl(clientid):
-    rtl_ip = appsettings.get("RTL_IP")
+    rtl_ip = appsettings.RTL_IP
     client = paho.Client(clientid)
     client.connect(rtl_ip, 1883)
     return client

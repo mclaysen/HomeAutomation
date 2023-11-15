@@ -1,10 +1,22 @@
 {
     "DTE_IP": "192.168.2.190",
     "RTL_IP": "192.168.86.211",
-    "SensorIDs": {
-        "basement": 5161,
-        "main_floor": 15881,
-        "attic": 8386,
-        "door_sensor": 30409
-    }
+    "sensorMappings": [
+        {
+            "name": "basement",
+            "id": 5161
+        },
+        {
+            "name": "main_floor",
+            "id": 15881
+        },
+        {
+            "name": "attic",
+            "id": 8386
+        },
+        {
+            "name": "door_sensor",
+            "id": 30409
+        }
+    ]
 }
