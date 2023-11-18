@@ -10,12 +10,13 @@ class SensorMapping:
         return cls(**data)
 
 class Config:
-    def __init__(self, DTE_IP: str, RTL_IP: str, sensorMappings: List[SensorMapping]) -> None:
+    def __init__(self, DTE_IP: str, RTL_IP: str, HOME_ASSISTANT_IP: str, sensorMappings: List[SensorMapping]) -> None:
         self.DTE_IP = DTE_IP
         self.RTL_IP = RTL_IP
+        self.HOMEASSISTANT_IP = HOME_ASSISTANT_IP
         self.sensorMappings = sensorMappings
 
     @classmethod
     def from_dict(cls, data: dict) -> 'Config':
         sensorMappings = [SensorMapping.from_dict(sm) for sm in data['sensorMappings']]
-        return cls(data['DTE_IP'], data['RTL_IP'], sensorMappings)
+        return cls(data['DTE_IP'], data['RTL_IP'], data['HOME_ASSISTANT_IP'], sensorMappings)

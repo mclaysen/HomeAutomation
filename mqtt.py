@@ -5,6 +5,7 @@ import sys
 import configparser
 from models.temp_sensor import SensorData
 from models.sensorMappings import Config
+from publisher import MqttPublisher
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -30,15 +31,14 @@ def on_message_rtl(client, userdata, message):
         if sensor.id == decodedpayload.id:
             homeassistantclient.publish("rtl_433/"+sensor.name,message.payload)
         
-def connect_homeassistant(clientid):
-    homeassistantip="192.168.86.78"
-    print("connecting to home assistant", homeassistantip)
-    homeassistantclient = paho.Client(clientid)
+def connect_homeassistant() -> MqttPublisher:
+    client = MqttPublisher()
     username = config.get('HOMEASSISTANT', 'USER')
     password = config.get('HOMEASSISTANT', 'PASSWORD')
-    homeassistantclient.username_pw_set(username=username,password=password)
-    homeassistantclient.connect(homeassistantip)
-    return homeassistantclient
+    homeassistantip = appsettings.HOMEASSISTANT_IP
+    print("connecting to home assistant", homeassistantip)
+    client.connect(homeassistantip, username, password)
+    return client
 
 def connect_dte(clientid):
     client= paho.Client(clientid)
@@ -52,7 +52,7 @@ def connect_rtl(clientid):
     client.connect(rtl_ip, 1883)
     return client
 
-homeassistantclient = connect_homeassistant("client-5")
+homeassistantclient = connect_homeassistant()
 
 dteclient = connect_dte("client-7")
 dteclient.on_message=on_message_dte

@@ -1,6 +1,7 @@
 {
     "DTE_IP": "192.168.2.190",
     "RTL_IP": "192.168.86.211",
+    "HOME_ASSISTANT_IP": "192.168.86.78",
     "sensorMappings": [
         {
             "name": "basement",
