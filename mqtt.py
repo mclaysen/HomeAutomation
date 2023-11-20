@@ -6,6 +6,8 @@ import configparser
 from models.temp_sensor import SensorData
 from models.sensorMappings import Config
 from publisher import MqttPublisher
+from models.subscriber import Subscriber
+from subscriber import MqttSubcriber
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -40,12 +42,6 @@ def connect_homeassistant() -> MqttPublisher:
     client.connect(homeassistantip, username, password)
     return client
 
-def connect_dte(clientid):
-    client= paho.Client(clientid)
-    dte_ip = appsettings.DTE_IP
-    client.connect(dte_ip, 2883)
-    return client
-
 def connect_rtl(clientid):
     rtl_ip = appsettings.RTL_IP
     client = paho.Client(clientid)
@@ -54,10 +50,9 @@ def connect_rtl(clientid):
 
 homeassistantclient = connect_homeassistant()
 
-dteclient = connect_dte("client-7")
-dteclient.on_message=on_message_dte
-dteclient.subscribe("event/metering/#")
-dteclient.loop_start()
+dtesub = Subscriber(appsettings.DTE_IP, 2883, "event/metering/#", on_message_dte)
+dtesubclient = MqttSubcriber(dtesub)
+dtesubclient.connect()
 
 rtlclient = connect_rtl("client-8")
 rtlclient.on_message = on_message_rtl
@@ -67,8 +62,7 @@ rtlclient.loop_forever()
 def exit_gracefully(signum, frame):
     print("exiting")
     homeassistantclient.disconnect()
-    dteclient.disconnect()
-    dteclient.loop_stop()
+    dtesubclient.disconnect()
 
     rtlclient.disconnect()
     rtlclient.loop_stop()
