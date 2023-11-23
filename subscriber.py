@@ -7,10 +7,10 @@ class MqttSubcriber:
         self.client = None
 
     def connect(self) -> None:
-        self.client = paho.mqtt.client.Client()
+        self.client = paho.mqtt.client.Client("client-001")
         self.client.on_message = self.subsciberData.callback
-        self.client.connect_async(self.subsciberData.ip, self.port)
-        self.client.subscribe(self.topic)
+        self.client.connect(self.subsciberData.ip, self.subsciberData.port)
+        self.client.subscribe(self.subsciberData.topic)
         self.client.loop_start()
 
     def disconnect(self) -> None:

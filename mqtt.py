@@ -28,7 +28,7 @@ def on_message_dte(client, userdata, message):
 def on_message_rtl(client, userdata, message):
     payload = message.payload.decode("utf-8")
     decodedpayload = SensorData.from_dict(json.loads(payload))
-
+    print(payload)
     for sensor in appsettings.sensorMappings:
         if sensor.id == decodedpayload.id:
             homeassistantclient.publish("rtl_433/"+sensor.name,message.payload)
@@ -42,33 +42,32 @@ def connect_homeassistant() -> MqttPublisher:
     client.connect(homeassistantip, username, password)
     return client
 
-def connect_rtl(clientid):
-    rtl_ip = appsettings.RTL_IP
-    client = paho.Client(clientid)
-    client.connect(rtl_ip, 1883)
-    return client
-
 homeassistantclient = connect_homeassistant()
 
 dtesub = Subscriber(appsettings.DTE_IP, 2883, "event/metering/#", on_message_dte)
 dtesubclient = MqttSubcriber(dtesub)
 dtesubclient.connect()
 
-rtlclient = connect_rtl("client-8")
-rtlclient.on_message = on_message_rtl
-rtlclient.subscribe("rtl_433/raspberrypi/events/#")
-rtlclient.loop_forever()
+rtlsub = Subscriber(appsettings.RTL_IP, 1883, "rtl_433/raspberrypi/events/#", on_message_rtl)
+rtlsubclient = MqttSubcriber(rtlsub)
+rtlsubclient.connect()
 
 def exit_gracefully(signum, frame):
     print("exiting")
     homeassistantclient.disconnect()
     dtesubclient.disconnect()
-
-    rtlclient.disconnect()
-    rtlclient.loop_stop()
+    rtlsubclient.disconnect()
 
     sys.exit(0)
 
 signal.signal(signal.SIGTERM, exit_gracefully)
 signal.signal(signal.SIGINT, exit_gracefully)
 signal.signal(signal.SIGQUIT, exit_gracefully)
+
+while True:
+    pass
+
+
+
+
+
