@@ -1,13 +1,15 @@
-import paho.mqtt.client
+import paho.mqtt.client as mqtt
 from models.subscriber import Subscriber
+import uuid
 
 class MqttSubcriber:
     def __init__(self, subscriberData : Subscriber) -> None:
         self.subsciberData = subscriberData
+        self.clientId = str(uuid.uuid4())
         self.client = None
 
     def connect(self) -> None:
-        self.client = paho.mqtt.client.Client("client-001")
+        self.client = mqtt.Client(self.clientId)
         self.client.on_message = self.subsciberData.callback
         self.client.connect(self.subsciberData.ip, self.subsciberData.port)
         self.client.subscribe(self.subsciberData.topic)
