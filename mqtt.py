@@ -1,5 +1,4 @@
 import json
-import paho.mqtt.client as paho
 import signal
 import sys
 import configparser
@@ -8,6 +7,7 @@ from models.sensorMappings import Config
 from publisher import MqttPublisher
 from models.subscriber import Subscriber
 from subscriber import MqttSubcriber
+from models.energyData import EnergyData, EnergyType
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -18,9 +18,10 @@ with open('config.json') as f:
 
 def on_message_dte(client, userdata, message):
     powerData = message.payload.decode("utf-8")
-    decodedEnergyData = json.loads(powerData)
-    print(decodedEnergyData)
-    if "type" not in decodedEnergyData:
+
+    decodedEnergyData = EnergyData.from_dict(json.loads(powerData))
+    print(powerData)
+    if decodedEnergyData.type == EnergyType.INSTANT:
         homeassistantclient.publish("energy/meter/instant",powerData)
     else:
         homeassistantclient.publish("energy/meter/summary",powerData)
