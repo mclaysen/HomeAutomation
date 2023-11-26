@@ -1,9 +1,10 @@
 import paho.mqtt.client as mqtt
 from models.subscriber import Subscriber
+from paho.mqtt.client import Client
 import uuid
 
 class MqttSubcriber:
-    def __init__(self, subscriberData : Subscriber) -> None:
+    def __init__(self, subscriberData: Subscriber) -> None:
         self.subsciberData = subscriberData
         self.clientId = str(uuid.uuid4())
         self.client = None
@@ -16,8 +17,9 @@ class MqttSubcriber:
         self.client.loop_start()
 
     def disconnect(self) -> None:
-        self.client.loop_stop()
-        self.client.disconnect()
+        if self.client is not None:
+            self.client.loop_stop()
+            self.client.disconnect()
 
     def __del__(self):
         self.disconnect()

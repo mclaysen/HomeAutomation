@@ -17,4 +17,5 @@ class MqttPublisher:
         self.client.publish(topic, payload)
 
     def disconnect(self) -> None:
-        self.client.disconnect()
+        if self.client is not None:
+            self.client.disconnect()
