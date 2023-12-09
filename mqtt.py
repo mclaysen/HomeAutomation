@@ -2,6 +2,7 @@ import json
 import signal
 import sys
 import configparser
+from log import MqttLogger
 from models.temp_sensor import SensorData
 from models.sensorMappings import Config
 from publisher import MqttPublisher
@@ -9,6 +10,7 @@ from models.subscriber import Subscriber
 from subscriber import MqttSubcriber
 from models.energyData import EnergyData, EnergyType
 
+logger = MqttLogger("console_logger").getLogger()
 config = configparser.ConfigParser()
 config.read('config.ini')
 
@@ -39,7 +41,7 @@ def connect_homeassistant() -> MqttPublisher:
     username = config.get('HOMEASSISTANT', 'USER')
     password = config.get('HOMEASSISTANT', 'PASSWORD')
     homeassistantip = appsettings.HOMEASSISTANT_IP
-    print("connecting to home assistant", homeassistantip)
+    logger.info("Connecting to Home Assistant at %s", homeassistantip)
     client.connect(homeassistantip, username, password)
     return client
 
@@ -47,10 +49,12 @@ homeassistantclient = connect_homeassistant()
 
 dtesub = Subscriber(appsettings.DTE_IP, 2883, "event/metering/#", on_message_dte)
 dtesubclient = MqttSubcriber(dtesub)
+logger.info("Connecting to DTE at %s", appsettings.DTE_IP)
 dtesubclient.connect()
 
 rtlsub = Subscriber(appsettings.RTL_IP, 1883, "rtl_433/raspberrypi/events/#", on_message_rtl)
 rtlsubclient = MqttSubcriber(rtlsub)
+logger.info("Connecting to RTL at %s", appsettings.RTL_IP)
 rtlsubclient.connect()
 
 def exit_gracefully(signum, frame):
