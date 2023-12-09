@@ -22,7 +22,7 @@ def on_message_dte(client, userdata, message):
     powerData = message.payload.decode("utf-8")
 
     decodedEnergyData = EnergyData.from_dict(json.loads(powerData))
-    print(powerData)
+    logger.info(powerData)
     if decodedEnergyData.type == EnergyType.INSTANT:
         homeassistantclient.publish("energy/meter/instant",powerData)
     else:
@@ -31,7 +31,7 @@ def on_message_dte(client, userdata, message):
 def on_message_rtl(client, userdata, message):
     payload = message.payload.decode("utf-8")
     decodedpayload = SensorData.from_dict(json.loads(payload))
-    print(payload)
+    logger.info(payload)
     for sensor in appsettings.sensorMappings:
         if sensor.id == decodedpayload.id:
             homeassistantclient.publish("rtl_433/"+sensor.name,message.payload)

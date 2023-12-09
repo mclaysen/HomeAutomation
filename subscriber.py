@@ -2,6 +2,7 @@ import paho.mqtt.client as mqtt
 from models.subscriber import Subscriber
 from paho.mqtt.client import Client
 import uuid
+import logging
 
 class MqttSubcriber:
     def __init__(self, subscriberData: Subscriber) -> None:
