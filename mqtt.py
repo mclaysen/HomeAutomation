@@ -48,12 +48,12 @@ def connect_homeassistant() -> MqttPublisher:
 homeassistantclient = connect_homeassistant()
 
 dtesub = Subscriber(appsettings.DTE_IP, 2883, "event/metering/#", on_message_dte)
-dtesubclient = MqttSubcriber(dtesub)
+dtesubclient = MqttSubcriber(dtesub, logger)
 logger.info("Connecting to DTE at %s", appsettings.DTE_IP)
 dtesubclient.connect()
 
 rtlsub = Subscriber(appsettings.RTL_IP, 1883, "rtl_433/raspberrypi/events/#", on_message_rtl)
-rtlsubclient = MqttSubcriber(rtlsub)
+rtlsubclient = MqttSubcriber(rtlsub, logger)
 logger.info("Connecting to RTL at %s", appsettings.RTL_IP)
 rtlsubclient.connect()
 
