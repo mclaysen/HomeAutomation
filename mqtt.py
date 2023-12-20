@@ -60,8 +60,8 @@ rtlsubclient.connect()
 def exit_gracefully(signum, frame):
     print("exiting")
     homeassistantclient.disconnect()
-    dtesubclient.disconnect()
-    rtlsubclient.disconnect()
+    dtesubclient.quit()
+    rtlsubclient.quit()
 
     sys.exit(0)
 

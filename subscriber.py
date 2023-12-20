@@ -41,9 +41,12 @@ class MqttSubcriber:
             self.logger.info("Reconnecting")
             self.client.reconnect()
             self.client.loop_start()
-
-    def __del__(self):
+    
+    def quit(self) -> None:
         self.logger.info("Stopping loop")
         if self.client is not None:
             self.client.loop_stop()
             self.client.disconnect()
+
+    def __del__(self):
+        self.quit()
