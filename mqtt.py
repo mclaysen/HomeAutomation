@@ -19,23 +19,29 @@ with open('config.json') as f:
     appsettings = Config.from_dict(data)
 
 def on_message_dte(client, userdata, message):
-    powerData = message.payload.decode("utf-8")
+    try:
+        powerData = message.payload.decode("utf-8")
 
-    decodedEnergyData = EnergyData.from_dict(json.loads(powerData))
-    logger.info(powerData)
-    if decodedEnergyData.type == EnergyType.INSTANT:
-        homeassistantclient.publish("energy/meter/instant",powerData)
-    else:
-        homeassistantclient.publish("energy/meter/summary",powerData)
+        decodedEnergyData = EnergyData.from_dict(json.loads(powerData))
+        logger.info(powerData)
+        if decodedEnergyData.type == EnergyType.INSTANT:
+            homeassistantclient.publish("energy/meter/instant",powerData)
+        else:
+            homeassistantclient.publish("energy/meter/summary",powerData)
+    except Exception as e:
+        logger.error("Error parsing payload for DTE. Exception: %s", e)
 
 def on_message_rtl(client, userdata, message):
-    payload = message.payload.decode("utf-8")
-    decodedpayload = SensorData.from_dict(json.loads(payload))
-    logger.info(payload)
-    for sensor in appsettings.sensorMappings:
-        if sensor.id == decodedpayload.id:
-            homeassistantclient.publish("rtl_433/"+sensor.name,message.payload)
-        
+    try:
+        payload = message.payload.decode("utf-8")
+        decodedpayload = SensorData.from_dict(json.loads(payload))
+        logger.info(payload)
+        for sensor in appsettings.sensorMappings:
+            if sensor.id == decodedpayload.id:
+                homeassistantclient.publish("rtl_433/"+sensor.name,message.payload)
+    except Exception as e:
+        logger.error("Error parsing payload for RTL. Exception: %s", e)
+    
 def connect_homeassistant() -> MqttPublisher:
     client = MqttPublisher()
     username = config.get('HOMEASSISTANT', 'USER')
