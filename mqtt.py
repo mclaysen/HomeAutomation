@@ -3,7 +3,8 @@ import signal
 import sys
 import configparser
 from log import MqttLogger
-from models.temp_sensor import SensorData
+from models.temp_sensor import TempSensorData
+from models.door_sensor import DoorSensorData
 from models.sensorMappings import Config
 from publisher import MqttPublisher
 from models.subscriber import Subscriber
@@ -34,11 +35,26 @@ def on_message_dte(client, userdata, message):
 def on_message_rtl(client, userdata, message):
     try:
         payload = message.payload.decode("utf-8")
-        decodedpayload = SensorData.from_dict(json.loads(payload))
-        logger.info(payload)
-        for sensor in appsettings.sensorMappings:
-            if sensor.id == decodedpayload.id:
-                homeassistantclient.publish("rtl_433/"+sensor.name,message.payload)
+        payload_obj = json.loads(payload)
+        if payload_obj["model"] == "Acurite-Tower":
+            decodedpayload = TempSensorData.from_dict(json.loads(payload))
+            tempModel = next(model for model in appsettings.ModelMappings if model.model == decodedpayload.model)
+            if(tempModel is not None):
+                sensor = next(sensor for sensor in tempModel.sensors if sensor.id == decodedpayload.id)
+                if(sensor is not None):
+                    homeassistantclient.publish("rtl_433/"+sensor.name,message.payload)
+                else:
+                    logger.warn("No sensor found for %s", decodedpayload.id)
+        elif payload_obj["model"] == "Generic-Remote":
+            decodedpayload = DoorSensorData.from_dict(json.loads(payload))
+            doorModel = next(model for model in appsettings.ModelMappings if model.model == decodedpayload.model)
+            if(doorModel is not None):
+                sensor = next(sensor for sensor in doorModel.sensors if sensor.id == decodedpayload.house_code)
+                if(sensor is not None):
+                    homeassistantclient.publish("rtl_433/"+sensor.name,message.payload)
+                else:
+                    logger.warn("No sensor found for %s", decodedpayload.house_code)
+
     except Exception as e:
         logger.error("Error parsing payload for RTL. Exception: %s", e)
     

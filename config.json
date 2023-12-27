@@ -2,22 +2,32 @@
     "DTE_IP": "192.168.2.190",
     "RTL_IP": "192.168.86.211",
     "HOME_ASSISTANT_IP": "192.168.86.78",
-    "sensorMappings": [
-        {
-            "name": "basement",
-            "id": 5161
+    "ModelMappings": [
+        { 
+            "Model": "Acurite-Tower",
+            "Sensors":   [
+                {
+                    "name": "basement",
+                    "id": 5161
+                },
+                {
+                    "name": "main_floor",
+                    "id": 15881
+                },
+                {
+                    "name": "attic",
+                    "id": 8386
+                }
+            ]
         },
-        {
-            "name": "main_floor",
-            "id": 15881
-        },
-        {
-            "name": "attic",
-            "id": 8386
-        },
-        {
-            "name": "door_sensor",
-            "id": 30409
+        { 
+            "Model":"Generic-Remote",
+            "Sensors": [
+                {
+                    "name": "master_closet",
+                    "id": 30409
+                }
+            ]
         }
     ]
 }

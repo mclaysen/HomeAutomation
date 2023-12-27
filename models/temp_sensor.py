@@ -1,6 +1,6 @@
 from typing import Optional
 
-class SensorData:
+class TempSensorData:
     def __init__(self, time: str, model: str, id: int, channel: str, battery_ok: int, temperature_C: float, humidity: int, mic: str) -> None:
         self.time = time
         self.model = model
@@ -12,5 +12,5 @@ class SensorData:
         self.mic = mic
 
     @classmethod
-    def from_dict(cls, data: dict) -> 'SensorData':
+    def from_dict(cls, data: dict) -> 'TempSensorData':
         return cls(**data)
