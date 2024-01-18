@@ -37,10 +37,14 @@ class MqttSubcriber:
             self.client.loop_stop()
             self.client.disconnect()
 
-            time.sleep(60)
-            self.logger.info("Reconnecting")
-            self.client.reconnect()
-            self.client.loop_start()
+            while True:
+                try:
+                    self.logger.info("Reconnecting")
+                    self.client.reconnect()
+                    self.client.loop_start()
+                    break
+                except Exception as e:
+                    self.logger.error("Error reconnecting. Exception: %s", e)
     
     def quit(self) -> None:
         self.logger.info("Stopping loop")

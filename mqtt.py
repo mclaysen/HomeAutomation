@@ -2,6 +2,7 @@ import json
 import signal
 import sys
 import configparser
+import os
 from log import MqttLogger
 from models.temp_sensor import TempSensorData
 from models.door_sensor import DoorSensorData
@@ -13,9 +14,13 @@ from models.energyData import EnergyData, EnergyType
 
 logger = MqttLogger("console_logger").getLogger()
 config = configparser.ConfigParser()
-config.read('config.ini')
+current_dir = os.path.dirname(os.path.abspath(__file__))
+config_index = os.path.join(current_dir, 'config.ini')
+config_json = os.path.join(current_dir, 'config.json')
 
-with open('config.json') as f:
+config.read(config_index)
+
+with open(config_json) as f:
     data = json.load(f)
     appsettings = Config.from_dict(data)
 
@@ -24,7 +29,7 @@ def on_message_dte(client, userdata, message):
         powerData = message.payload.decode("utf-8")
 
         decodedEnergyData = EnergyData.from_dict(json.loads(powerData))
-        logger.info(powerData)
+        logger.debug(powerData)
         if decodedEnergyData.type == EnergyType.INSTANT:
             homeassistantclient.publish("energy/meter/instant",powerData)
         else:
@@ -36,6 +41,7 @@ def on_message_rtl(client, userdata, message):
     try:
         payload = message.payload.decode("utf-8")
         payload_obj = json.loads(payload)
+        logger.debug(payload)
         if payload_obj["model"] == "Acurite-Tower":
             decodedpayload = TempSensorData.from_dict(json.loads(payload))
             tempModel = next(model for model in appsettings.ModelMappings if model.model == decodedpayload.model)
@@ -58,7 +64,7 @@ def on_message_rtl(client, userdata, message):
     except Exception as e:
         logger.error("Error parsing payload for RTL. Exception: %s", e)
     
-def connect_homeassistant() -> MqttPublisher:
+def connect_homeassistant():
     client = MqttPublisher()
     username = config.get('HOMEASSISTANT', 'USER')
     password = config.get('HOMEASSISTANT', 'PASSWORD')
