@@ -26,9 +26,24 @@ class MqttSubcriber:
         self.client.on_disconnect = self.disconnect
         self.client.on_message = self.subsciberData.callback
         self.logger.info("Connecting to %s", self.subsciberData.ip)
-        self.client.connect(self.subsciberData.ip, self.subsciberData.port)
-        self.client.loop_start()
+        self._startSubscriber(self.subsciberData.ip, self.subsciberData.port)
         return self.client
+    
+    def _startSubscriber(self, ip: str, port: int) -> None:
+        if self.client is not None:
+            while True:
+                try:
+                    self.client.connect(ip, port)
+                    self.client.loop_start()
+                    break
+                except TimeoutError:
+                    self.logger.error("Timeout connecting to %s", ip)
+                    time.sleep(15)
+                except Exception as e:
+                    self.logger.error("Error connecting to %s. Exception: %s", ip, e)
+                    break
+        else:
+            self.logger.error("Client is not connected")
 
     def disconnect(self, client : Client, userdata, rc) -> None:
         self.logger.warn("Disconnecting from %s", self.subsciberData.ip)
