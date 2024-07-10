@@ -40,6 +40,7 @@ def on_message_dte(client, userdata, message):
 def on_message_rtl(client, userdata, message):
     try:
         payload = message.payload.decode("utf-8")
+        raise Exception("Test")
         payload_obj = json.loads(payload)
         logger.debug(payload)
         if payload_obj["model"] == "Acurite-Tower":
@@ -62,7 +63,7 @@ def on_message_rtl(client, userdata, message):
                     logger.warn("No sensor found for %s", decodedpayload.house_code)
 
     except Exception as e:
-        logger.error("Error parsing payload for RTL. Exception: %s", e)
+        logger.error("Error parsing payload for RTL message %s. Exception: %s", message.payload, e)
     
 def connect_homeassistant():
     client = MqttPublisher()
