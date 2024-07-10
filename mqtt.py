@@ -40,7 +40,6 @@ def on_message_dte(client, userdata, message):
 def on_message_rtl(client, userdata, message):
     try:
         payload = message.payload.decode("utf-8")
-        raise Exception("Test")
         payload_obj = json.loads(payload)
         logger.debug(payload)
         if payload_obj["model"] == "Acurite-Tower":
