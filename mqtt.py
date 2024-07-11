@@ -11,6 +11,7 @@ from publisher import MqttPublisher
 from models.subscriber import Subscriber
 from subscriber import MqttSubcriber
 from models.energyData import EnergyData, EnergyType
+from models.publisher import Publisher
 
 logger = MqttLogger("console_logger").getLogger()
 config = configparser.ConfigParser()
@@ -65,12 +66,14 @@ def on_message_rtl(client, userdata, message):
         logger.error("Error parsing payload for RTL message %s. Exception: %s", message.payload, e)
     
 def connect_homeassistant():
-    client = MqttPublisher()
+    
     username = config.get('HOMEASSISTANT', 'USER')
     password = config.get('HOMEASSISTANT', 'PASSWORD')
     homeassistantip = appsettings.HOMEASSISTANT_IP
+    publiserData = Publisher(homeassistantip, 1883, username, password)
+    client = MqttPublisher(publisherData=publiserData)
     logger.info("Connecting to Home Assistant at %s", homeassistantip)
-    client.connect(homeassistantip, username, password)
+    client.connect()
     return client
 
 homeassistantclient = connect_homeassistant()
@@ -87,7 +90,7 @@ rtlsubclient.connect()
 
 def exit_gracefully(signum, frame):
     print("exiting")
-    homeassistantclient.disconnect()
+    homeassistantclient.quit()
     dtesubclient.quit()
     rtlsubclient.quit()
 

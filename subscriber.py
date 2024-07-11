@@ -21,15 +21,16 @@ class MqttSubcriber:
         client.subscribe(self.subsciberData.topic)
 
     def connect(self) -> Client:
-        self.client = mqtt.Client(self.clientId)
+        self.client = mqtt.Client(self.clientId, clean_session=False)
         self.client.on_connect = self.on_connect
         self.client.on_disconnect = self.disconnect
         self.client.on_message = self.subsciberData.callback
-        self.logger.info("Connecting to %s", self.subsciberData.ip)
+        self.logger.info("Connecting to %s, client id %s", self.subsciberData.ip, self.clientId)
         self._startSubscriber(self.subsciberData.ip, self.subsciberData.port)
         return self.client
     
     def _startSubscriber(self, ip: str, port: int) -> None:
+        self.logger.info("Starting subscriber for %s", ip)
         if self.client is not None:
             while True:
                 try:
