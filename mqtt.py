@@ -7,11 +7,11 @@ from log import MqttLogger
 from models.temp_sensor import TempSensorData
 from models.door_sensor import DoorSensorData
 from models.sensorMappings import Config
-from publisher import MqttPublisher
-from models.subscriber import Subscriber
-from subscriber import MqttSubcriber
+from mqttHandlers.publisher import MqttPublisher
+from mqttHandlers.subscriberModel import Subscriber
+from mqttHandlers.subscriber import MqttSubcriber
 from models.energyData import EnergyData, EnergyType
-from models.publisher import Publisher
+from mqttHandlers.publisherModel import Publisher
 
 logger = MqttLogger("console_logger").getLogger()
 config = configparser.ConfigParser()
@@ -71,7 +71,7 @@ def connect_homeassistant():
     password = config.get('HOMEASSISTANT', 'PASSWORD')
     homeassistantip = appsettings.HOMEASSISTANT_IP
     publiserData = Publisher(homeassistantip, 1883, username, password)
-    client = MqttPublisher(publisherData=publiserData)
+    client = MqttPublisher(publisherData=publiserData, logger=logger)
     logger.info("Connecting to Home Assistant at %s", homeassistantip)
     client.connect()
     return client
