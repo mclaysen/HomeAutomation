@@ -8,6 +8,7 @@ from models.temp_sensor import TempSensorData
 from models.door_sensor import DoorSensorData
 from models.sensorMappings import Config
 from mqttHandlers.publisher import MqttPublisher
+from mqttHandlers.rtlSub import RTLSub
 from mqttHandlers.subscriberModel import Subscriber
 from mqttHandlers.subscriber import MqttSubcriber
 from models.energyData import EnergyData, EnergyType
@@ -65,7 +66,7 @@ def on_message_rtl(client, userdata, message):
     except Exception as e:
         logger.error("Error parsing payload for RTL message %s. Exception: %s", message.payload, e)
     
-def connect_homeassistant():
+def connect_homeassistant() -> MqttPublisher:
     
     username = config.get('HOMEASSISTANT', 'USER')
     password = config.get('HOMEASSISTANT', 'PASSWORD')
@@ -83,16 +84,14 @@ dtesubclient = MqttSubcriber(dtesub, logger)
 logger.info("Connecting to DTE at %s", appsettings.DTE_IP)
 dtesubclient.connect()
 
-rtlsub = Subscriber(appsettings.RTL_IP, 1883, "rtl_433/raspberrypi/events/#", on_message_rtl)
-rtlsubclient = MqttSubcriber(rtlsub, logger)
-logger.info("Connecting to RTL at %s", appsettings.RTL_IP)
-rtlsubclient.connect()
+rtlSub = RTLSub(appsettings.RTL_IP, appsettings.ModelMappings, homeassistantclient, logger)
+rtlSub.connect()
 
 def exit_gracefully(signum, frame):
     print("exiting")
     homeassistantclient.quit()
     dtesubclient.quit()
-    rtlsubclient.quit()
+    rtlSub.quit()
 
     sys.exit(0)
 

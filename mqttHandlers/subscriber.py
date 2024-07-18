@@ -7,7 +7,7 @@ import logging.config
 import time
 from mqttHandlers.pubSub import PubSub
 class MqttSubcriber(PubSub):
-    def __init__(self, subscriberData: Subscriber, logger: logging.Logger) -> None:
+    def __init__(self, subscriberData: Subscriber, logger: logging.Logger) :
         super().__init__(subscriberData.callback, subscriberData.topic, logger)
         self.subsciberData = subscriberData
         self.clientId = str(uuid.uuid4())
