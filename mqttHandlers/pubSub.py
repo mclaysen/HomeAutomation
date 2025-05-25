@@ -9,7 +9,7 @@ import time
 
 
 class PubSub(ABC):
-    def __init__(self, callback, topic : str | None, logger: logging.Logger):
+    def __init__(self, callback, topic : str , logger: logging.Logger):
         self.client = None
         self.clientId = str(uuid.uuid4())
         self.topic = topic
