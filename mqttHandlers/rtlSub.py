@@ -1,6 +1,7 @@
 import json
 import logging
 import logging.config
+from typing import List
 from models.door_sensor import DoorSensorData
 from models.sensorMappings import ModelMapping
 from models.temp_sensor import TempSensorData
