@@ -11,7 +11,7 @@ from mqttHandlers.subscriberModel import Subscriber
 
 
 class RTLSub:
-    def __init__(self, ip : str, modelMappings : list[ModelMapping], publisher : MqttPublisher, logger: logging.Logger):
+    def __init__(self, ip : str, modelMappings : List[ModelMapping], publisher : MqttPublisher, logger: logging.Logger):
         self.logger = logger
         self.publisher=  publisher
         self.modelMappings = modelMappings
