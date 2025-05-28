@@ -21,6 +21,14 @@
                 {
                     "name":"garage",
                     "id": 568
+                },
+                {
+                    "name":"outside",
+                    "id": 6278
+                },
+                {
+                    "name":"bathroom",
+                    "id": 4888
                 }
             ]
         },
