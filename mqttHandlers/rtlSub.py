@@ -16,7 +16,7 @@ class RTLSub:
         self.publisher=  publisher
         self.modelMappings = modelMappings
         self.ip = ip
-        subscriberData = Subscriber(ip, 1883, "rtl_433/+/devices/#", self.on_message)
+        subscriberData = Subscriber(ip, 1883, "rtl_433/+/events/#", self.on_message)
         self.subscriber = MqttSubcriber(subscriberData, logger)
 
     def connect(self) -> None:
