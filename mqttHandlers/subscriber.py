@@ -15,7 +15,7 @@ class MqttSubcriber(PubSub):
         self.logger = logger
 
     def connect(self) -> Client:
-        self.client = mqtt.Client(self.clientId, clean_session=False)
+        self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, self.clientId, clean_session=False)
         self.client.on_connect = self.on_connect
         self.client.on_disconnect = self.disconnect
         self.client.on_message = self.subsciberData.callback
