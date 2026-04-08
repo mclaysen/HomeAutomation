@@ -1,5 +1,3 @@
-from typing import Optional
-
 class DoorSensorData:
     def __init__(self, time: str, model: str, id: int, cmd: int, tristate: str) -> None:
         self.time = time

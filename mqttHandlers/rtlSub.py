@@ -5,6 +5,7 @@ from typing import List
 from models.door_sensor import DoorSensorData
 from models.sensorMappings import ModelMapping
 from models.temp_sensor import TempSensorData
+from models.water_sensor import WaterSensorData
 from mqttHandlers.publisher import MqttPublisher
 from mqttHandlers.subscriber import MqttSubcriber
 from mqttHandlers.subscriberModel import Subscriber
@@ -49,6 +50,17 @@ class RTLSub:
                         self.publisher.publish("rtl_433/"+sensor.name,message.payload)
                     else:
                         self.logger.warn("No sensor found for %s", decodedpayload.house_code)
+            elif payload_obj["model"] == "Govee-Water":
+                decodedpayload = WaterSensorData.from_dict(json.loads(payload))
+                waterModel = next(model for model in self.modelMappings if model.model == decodedpayload.model)
+                if(waterModel is not None):
+                    sensor = next(sensor for sensor in waterModel.sensors if sensor.id == decodedpayload.id)
+                    if(sensor is not None):
+                        self.publisher.publish("rtl_433/"+sensor.name,message.payload)
+                    else:
+                        self.logger.warn("No sensor found for %s", decodedpayload.id)
+            else:
+                self.logger.debug("Ignoring unsupported model: %s", payload_obj.get("model"))
         except Exception as e:
             self.logger.error("Error parsing payload for RTL message %s. Exception: %s", message.payload, e)
     

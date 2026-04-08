@@ -1,5 +1,3 @@
-from typing import Optional
-
 class TempSensorData:
     def __init__(self, time: str, model: str, id: int, channel: str, battery_ok: int, temperature_C: float, humidity: int, mic: str) -> None:
         self.time = time
