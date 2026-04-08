@@ -6,6 +6,7 @@ import os
 from log import MqttLogger
 from models.temp_sensor import TempSensorData
 from models.door_sensor import DoorSensorData
+from models.water_sensor import WaterSensorData
 from models.sensorMappings import Config
 from mqttHandlers.publisher import MqttPublisher
 from mqttHandlers.rtlSub import RTLSub
@@ -62,6 +63,15 @@ def on_message_rtl(client, userdata, message):
                     homeassistantclient.publish("rtl_433/"+sensor.name,message.payload)
                 else:
                     logger.warn("No sensor found for %s", decodedpayload.house_code)
+        elif payload_obj["model"] == "Govee-Water":
+            decodedpayload = WaterSensorData.from_dict(json.loads(payload))
+            waterModel = next(model for model in appsettings.ModelMappings if model.model == decodedpayload.model)
+            if(waterModel is not None):
+                sensor = next(sensor for sensor in waterModel.sensors if sensor.id == decodedpayload.id)
+                if(sensor is not None):
+                    homeassistantclient.publish("rtl_433/"+sensor.name,message.payload)
+                else:
+                    logger.warn("No sensor found for %s", decodedpayload.id)
 
     except Exception as e:
         logger.error("Error parsing payload for RTL message %s. Exception: %s", message.payload, e)

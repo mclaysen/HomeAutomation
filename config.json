@@ -16,7 +16,7 @@
                 },
                 {
                     "name": "attic",
-                    "id": 8386
+                    "id": 14820
                 },
                 {
                     "name":"garage",
@@ -29,6 +29,15 @@
                 {
                     "name":"bathroom",
                     "id": 4888
+                }
+            ]
+        },
+        {
+            "Model": "Govee-Water",
+            "Sensors": [
+                {
+                    "name": "kitchen_sink",
+                    "id": 7347
                 }
             ]
         },
