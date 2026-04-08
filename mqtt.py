@@ -72,8 +72,3 @@ signal.signal(signal.SIGQUIT, exit_gracefully)
 
 while True:
     pass
-
-
-
-
-
