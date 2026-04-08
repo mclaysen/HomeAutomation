@@ -10,7 +10,6 @@ from mqttHandlers.publisher import MqttPublisher
 from mqttHandlers.subscriber import MqttSubcriber
 from mqttHandlers.subscriberModel import Subscriber
 
-
 class RTLSub:
     def __init__(self, ip : str, modelMappings : List[ModelMapping], publisher : MqttPublisher, logger: logging.Logger):
         self.logger = logger
