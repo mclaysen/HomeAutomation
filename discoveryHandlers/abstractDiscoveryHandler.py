@@ -9,7 +9,7 @@ class AbstractDiscoveryHandler(ABC):
         self.sensorId = sensorId
 
     @abstractmethod
-    def getDiscoveryPayload(self, sensorName: str, sensorId: str, stateTopic: str) -> dict:
+    def getDiscoveryPayload(self, stateTopic: str) -> dict:
         pass
 
     def topic_for_discovery(self) -> str:

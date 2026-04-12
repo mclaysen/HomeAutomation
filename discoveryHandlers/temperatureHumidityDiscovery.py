@@ -5,12 +5,14 @@ class TempHumidityDiscovery(abstractDiscoveryHandler.AbstractDiscoveryHandler):
     def __init__(self, sensorName : str, sensorId: str) -> None:
         super().__init__(SensorType.TEMP_SENSOR, sensorName, sensorId)
         self.expireAfter = 180
+        self.sensorName = sensorName
+        self.sensorId = sensorId
 
-    def getDiscoveryPayload(self, sensorName: str, stateTopic: str) -> dict:
+    def getDiscoveryPayload(self, stateTopic: str) -> dict:
         payload = {
             "dev": {
                 "ids": self.sensorId,
-                "name": sensorName,
+                "name": self.sensorName,
                 "mf": "Acurite",
                 "mdl": "Acurite-Tower"
             },
@@ -22,7 +24,7 @@ class TempHumidityDiscovery(abstractDiscoveryHandler.AbstractDiscoveryHandler):
             {
                 "temperature": {
                     "p": "sensor",
-                    "name": sensorName + " Temperature",
+                    "name": self.sensorName + " Temperature",
                     "device_class": "temperature",
                     "unit_of_measurement": "°C",
                     "value_template": "{{ value_json.temperature_C | float }}",
@@ -31,7 +33,7 @@ class TempHumidityDiscovery(abstractDiscoveryHandler.AbstractDiscoveryHandler):
                 },
                 "humidity": {
                     "p": "sensor",
-                    "name": sensorName + " Humidity",
+                    "name": self.sensorName + " Humidity",
                     "unit_of_measurement": "%",
                     "device_class": "humidity",
                     "value_template": "{{ value_json.humidity | float }}",
@@ -40,7 +42,7 @@ class TempHumidityDiscovery(abstractDiscoveryHandler.AbstractDiscoveryHandler):
                 },
                 "batteryStatus": {
                     "p": "binary_sensor",
-                    "name": sensorName + " Battery Status",
+                    "name": self.sensorName + " Battery Status",
                     "device_class": "battery",
                     "value_template": "{{ value_json.battery_ok | number }}",
                     "payload_on": 1,
@@ -52,7 +54,7 @@ class TempHumidityDiscovery(abstractDiscoveryHandler.AbstractDiscoveryHandler):
                     "device_class": "timestamp",
                     "value_template": "{{ as_datetime(value_json.time).isoformat() }}",
                     "unique_id": self.getUniquePrefix("read_received"),
-                    "name": sensorName + " Read Received"
+                    "name": self.sensorName + " Read Received"
                 }
             },
             "qos": 0,
