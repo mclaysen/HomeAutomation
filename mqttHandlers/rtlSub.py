@@ -33,13 +33,15 @@ class RTLSub:
             self.logger.debug(payload)
             if payload_obj["model"] == "Acurite-Tower":
                 decodedpayload = TempSensorData.from_dict(json.loads(payload))
+                out_payload = json.dumps(decodedpayload.__dict__)
+                self.logger.debug(out_payload)
                 tempModel = next(model for model in self.modelMappings if model.model == decodedpayload.model)
                 if(tempModel is not None):
                     sensor = next(sensor for sensor in tempModel.sensors if sensor.id == decodedpayload.id)
                     if(sensor is not None):
-                        self.publisher.publish("rtl_433/"+sensor.name,message.payload, 0, False)
+                        self.publisher.publish("rtl_433/"+sensor.name,out_payload, 0, False)
                     else:
-                        self.logger.warn("No sensor found for %s", decodedpayload.id)
+                        self.logger.warning("No sensor found for %s", decodedpayload.id)
             elif payload_obj["model"] == "Generic-Remote":
                 decodedpayload = DoorSensorData.from_dict(json.loads(payload))
                 doorModel = next(model for model in self.modelMappings if model.model == decodedpayload.model)
