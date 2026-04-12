@@ -5,12 +5,15 @@ import configparser
 import os
 from log import MqttLogger
 from models.sensorMappings import Config
+from models.sensorTypes import SensorType
 from mqttHandlers.publisher import MqttPublisher
 from mqttHandlers.rtlSub import RTLSub
 from mqttHandlers.subscriberModel import Subscriber
 from mqttHandlers.subscriber import MqttSubcriber
 from models.energyData import EnergyData, EnergyType
 from mqttHandlers.publisherModel import Publisher
+from discoveryHandlers.discoveryFactory import DiscoveryFactory
+
 
 logger = MqttLogger("console_logger").getLogger()
 config = configparser.ConfigParser()
@@ -48,7 +51,17 @@ def connect_homeassistant() -> MqttPublisher:
     client.connect()
     return client
 
+def publish_discovery(client, appSettings):
+    discoveryFactory = DiscoveryFactory(SensorType.TEMP_SENSOR)
+
+    tempDiscovery = discoveryFactory.getDiscoveryObject("basement", "5161")
+
+    tempPayload = tempDiscovery.getDiscoveryPayload("rtl_433/basement")
+    tempTopic = tempDiscovery.topic_for_discovery()
+    client.publish(tempTopic, json.dumps(tempPayload), 1, True)
+
 homeassistantclient = connect_homeassistant()
+publish_discovery(homeassistantclient, appsettings)
 
 dtesub = Subscriber(appsettings.DTE_IP, 2883, "event/metering/#", on_message_dte)
 dtesubclient = MqttSubcriber(dtesub, logger)
