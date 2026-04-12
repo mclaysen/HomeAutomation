@@ -5,14 +5,14 @@ class TempHumidityDiscovery(abstractDiscoveryHandler.AbstractDiscoveryHandler):
     def __init__(self, sensorName : str, sensorId: str) -> None:
         super().__init__(SensorType.TEMP_SENSOR, sensorName, sensorId)
         self.expireAfter = 180
-        self.sensorName = sensorName
+        self.sensorName = sensorName.upper()
         self.sensorId = sensorId
 
     def getDiscoveryPayload(self, stateTopic: str) -> dict:
         payload = {
             "dev": {
                 "ids": self.sensorId,
-                "name": self.sensorName,
+                "name": self.sensorName + " Temp Sensor",
                 "mf": "Acurite",
                 "mdl": "Acurite-Tower"
             },
@@ -44,16 +44,16 @@ class TempHumidityDiscovery(abstractDiscoveryHandler.AbstractDiscoveryHandler):
                     "p": "binary_sensor",
                     "name": self.sensorName + " Battery Status",
                     "device_class": "battery",
-                    "value_template": "{{ value_json.battery_ok | number }}",
-                    "payload_on": 1,
-                    "payload_off": 0,
+                    "value_template": "{{ value_json.battery_ok | int }}",
+                    "payload_on": 0,
+                    "payload_off": 1,
                     "unique_id": self.getUniquePrefix("battery")
                 },
                 "readReceived": {
                     "p": "sensor",
                     "device_class": "timestamp",
-                    "value_template": "{{ as_datetime(value_json.time).isoformat() }}",
-                    "unique_id": self.getUniquePrefix("read_received"),
+                    "value_template": "{{ as_datetime(value_json.time) }}",
+                    "unique_id": self.getUniquePrefix("readreceived"),
                     "name": self.sensorName + " Read Received"
                 }
             },

@@ -15,13 +15,13 @@ class AbstractDiscoveryHandler(ABC):
     def topic_for_discovery(self) -> str:
         return "homeassistant/device/" + self.sensorName + "/" + self.sensorId + "/config"
     
-    def getUniquePrefix(self, type: str) -> str:
+    def getUniquePrefix(self, deviceClass: str) -> str:
         if(self.sensorType == SensorType.TEMP_SENSOR):
-            type = "temperature"
+            type = "temperaturesensor"
         elif(self.sensorType == SensorType.DOOR_SENSOR):
-            type = "door"
+            type = "doorsensor"
         elif(self.sensorType == SensorType.WATER_SENSOR):
-            type = "water"
+            type = "watersensor"
         else:
-            type = "unknown"
-        return type + "_" + self.sensorName + "_" + type
+            type = "unknownsensor"
+        return self.sensorName + "_" + type + "_" + deviceClass
