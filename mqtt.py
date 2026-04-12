@@ -60,6 +60,12 @@ def publish_discovery(client, appSettings):
     tempTopic = tempDiscovery.topic_for_discovery()
     client.publish(tempTopic, json.dumps(tempPayload), 1, True)
 
+def on_ha_status(client, userdata, message):
+    status = message.payload.decode("utf-8").strip().lower()
+    logger.info("Home Assistant status: %s", status)
+    if status == "online":
+        publish_discovery(client, appsettings)
+
 homeassistantclient = connect_homeassistant()
 publish_discovery(homeassistantclient, appsettings)
 
@@ -70,6 +76,10 @@ dtesubclient.connect()
 
 rtlSub = RTLSub(appsettings.RTL_IP, appsettings.ModelMappings, homeassistantclient, logger)
 rtlSub.connect()
+
+ha_status_sub = Subscriber(appsettings.HOMEASSISTANT_IP, 1883, "homeassistant/status", on_ha_status)
+ha_status_client = MqttSubcriber(ha_status_sub, logger)
+ha_status_client.connect()
 
 def exit_gracefully(signum, frame):
     print("exiting")
