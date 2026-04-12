@@ -21,11 +21,11 @@ class PubSub(ABC):
         self.logger.info("test")
     
 
-    def publish(self, topic, payload) -> None:
-        if(self.client == None):
+    def publish(self, topic, payload, qos, retain) -> None:
+        if(self.client is None):
             raise Exception("MQTT client is null")
         
-        self.client.publish(topic, payload)
+        self.client.publish(topic, payload, qos, retain)
 
     def _startSubscriber(self, ip: str, port: int) -> None:
         self.logger.info("Starting subscriber for %s", ip)

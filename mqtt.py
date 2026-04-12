@@ -31,9 +31,9 @@ def on_message_dte(client, userdata, message):
         decodedEnergyData = EnergyData.from_dict(json.loads(powerData))
         logger.debug(powerData)
         if decodedEnergyData.type == EnergyType.INSTANT:
-            homeassistantclient.publish("energy/meter/instant",powerData)
+            homeassistantclient.publish("energy/meter/instant",powerData, 0, False)
         else:
-            homeassistantclient.publish("energy/meter/summary",powerData)
+            homeassistantclient.publish("energy/meter/summary",powerData, 0, False)
     except Exception as e:
         logger.error("Error parsing payload for DTE. Exception: %s", e)
 

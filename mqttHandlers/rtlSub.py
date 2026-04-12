@@ -37,7 +37,7 @@ class RTLSub:
                 if(tempModel is not None):
                     sensor = next(sensor for sensor in tempModel.sensors if sensor.id == decodedpayload.id)
                     if(sensor is not None):
-                        self.publisher.publish("rtl_433/"+sensor.name,message.payload)
+                        self.publisher.publish("rtl_433/"+sensor.name,message.payload, 0, False)
                     else:
                         self.logger.warn("No sensor found for %s", decodedpayload.id)
             elif payload_obj["model"] == "Generic-Remote":
@@ -46,7 +46,7 @@ class RTLSub:
                 if(doorModel is not None):
                     sensor = next(sensor for sensor in doorModel.sensors if sensor.id == decodedpayload.house_code)
                     if(sensor is not None):
-                        self.publisher.publish("rtl_433/"+sensor.name,message.payload)
+                        self.publisher.publish("rtl_433/"+sensor.name,message.payload, 0, False)
                     else:
                         self.logger.warn("No sensor found for %s", decodedpayload.house_code)
             elif payload_obj["model"] == "Govee-Water":
@@ -55,7 +55,7 @@ class RTLSub:
                 if(waterModel is not None):
                     sensor = next(sensor for sensor in waterModel.sensors if sensor.id == decodedpayload.id)
                     if(sensor is not None):
-                        self.publisher.publish("rtl_433/"+sensor.name,message.payload)
+                        self.publisher.publish("rtl_433/"+sensor.name,message.payload, 0, False)
                     else:
                         self.logger.warn("No sensor found for %s", decodedpayload.id)
             else:
