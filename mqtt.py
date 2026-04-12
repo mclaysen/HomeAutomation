@@ -51,14 +51,16 @@ def connect_homeassistant() -> MqttPublisher:
     client.connect()
     return client
 
-def publish_discovery(client, appSettings):
+def publish_discovery(client, appSettings : Config) -> None:
     discoveryFactory = DiscoveryFactory(SensorType.TEMP_SENSOR)
 
-    tempDiscovery = discoveryFactory.getDiscoveryObject("basement", "5161")
-
-    tempPayload = tempDiscovery.getDiscoveryPayload("rtl_433/basement")
-    tempTopic = tempDiscovery.topic_for_discovery()
-    client.publish(tempTopic, json.dumps(tempPayload), 1, True)
+    for modelMapping in appSettings.ModelMappings:
+        if(modelMapping.model == "Acurite-Tower"):
+            for sensor in modelMapping.sensors:
+                discoveryObject = discoveryFactory.getDiscoveryObject(sensor.name, str(sensor.id))
+                discoveryTopic = discoveryObject.topic_for_discovery()
+                discoveryPayload = discoveryObject.getDiscoveryPayload("rtl_433/"+sensor.name)
+                client.publish(discoveryTopic, json.dumps(discoveryPayload), 1, True)
 
 def on_ha_status(client, userdata, message):
     status = message.payload.decode("utf-8").strip().lower()
