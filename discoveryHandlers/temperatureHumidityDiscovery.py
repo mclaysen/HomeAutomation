@@ -1,9 +1,9 @@
-from discoveryHandlers import abstractDiscoveryHandler
+from discoveryHandlers.abstractDiscoveryHandler import AbstractDiscoveryHandler
 from models.sensorTypes import SensorType
 
-class TempHumidityDiscovery(abstractDiscoveryHandler.AbstractDiscoveryHandler):
+class TempHumidityDiscovery(AbstractDiscoveryHandler):
     def __init__(self, sensorName : str, sensorId: str) -> None:
-        super().__init__(SensorType.TEMP_SENSOR, sensorName, sensorId)
+        super().__init__(SensorType.TEMP_SENSOR, sensorName, sensorId, None)
         self.expireAfter = 180
         self.sensorName = sensorName.upper()
         self.sensorId = sensorId
@@ -16,10 +16,7 @@ class TempHumidityDiscovery(abstractDiscoveryHandler.AbstractDiscoveryHandler):
                 "mf": "Acurite",
                 "mdl": "Acurite-Tower"
             },
-            "o": {
-                "name": "mclaysen - HomeAutomation",
-                "sw": "1.0.0"
-            },
+            "o": self.getOriginInfo(),
             "cmps":
             {
                 "temperature": {
