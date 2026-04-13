@@ -55,7 +55,7 @@ def publish_discovery(client, appSettings : Config) -> None:
     discoveryFactory = DiscoveryFactory(SensorType.TEMP_SENSOR)
 
     for modelMapping in appSettings.ModelMappings:
-        if(modelMapping.model == "Acurite-Tower"):
+        if(modelMapping.sensorType == SensorType.TEMP_SENSOR):
             for sensor in modelMapping.sensors:
                 discoveryObject = discoveryFactory.getDiscoveryObject(sensor.name, str(sensor.id))
                 discoveryTopic = discoveryObject.topic_for_discovery()
