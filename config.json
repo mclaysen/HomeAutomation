@@ -5,6 +5,7 @@
     "ModelMappings": [
         { 
             "Model": "Acurite-Tower",
+            "SensorType": "TEMP_SENSOR",
             "Sensors":   [
                 {
                     "name": "basement",
@@ -34,6 +35,7 @@
         },
         {
             "Model": "Govee-Water",
+            "SensorType": "WATER_SENSOR",
             "Sensors": [
                 {
                     "name": "kitchen_sink",
@@ -43,11 +45,8 @@
         },
         { 
             "Model":"Generic-Remote",
+            "SensorType": "DOOR_SENSOR",
             "Sensors": [
-                {
-                    "name": "master_closet",
-                    "id": 30409
-                },
                 {
                     "name": "guest_closet",
                     "id": 23112
@@ -55,6 +54,16 @@
                 {
                     "name": "office_closet",
                     "id": 10439
+                }
+            ]
+        },
+        {
+            "Model": "Custom-Door-Sensor",
+            "SensorType": "DOOR_SENSOR",
+            "Sensors": [
+                {
+                    "name": "master_closet",
+                    "id": 30409
                 }
             ]
         }

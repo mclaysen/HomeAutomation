@@ -1,5 +1,7 @@
 from typing import List
 
+from models.sensorTypes import SensorType
+
 class SensorMapping:
     def __init__(self, name: str, id: int) -> None:
         self.name = name
@@ -10,14 +12,15 @@ class SensorMapping:
         return cls(**data)
 
 class ModelMapping:
-    def __init__(self, model: str, sensors: List[SensorMapping]) -> None:
+    def __init__(self, model: str, sensorType : SensorType, sensors: List[SensorMapping]) -> None:
         self.model = model
+        self.sensorType = sensorType
         self.sensors = sensors
 
     @classmethod
     def from_dict(cls, data: dict) -> 'ModelMapping':
         sensors = [SensorMapping.from_dict(sm) for sm in data['Sensors']]
-        return cls(data['Model'], sensors)
+        return cls(data['Model'], SensorType[data['SensorType']], sensors)
 class Config:
     def __init__(self, DTE_IP: str, RTL_IP: str, HOME_ASSISTANT_IP: str, ModelMappings: List[ModelMapping]) -> None:
         self.DTE_IP = DTE_IP
