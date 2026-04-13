@@ -2,6 +2,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 def normalize_timestamp(timestamp: str) -> str:
+    #todo: make this generic
     raw = timestamp.replace(" ", "T")
     dt = datetime.fromisoformat(raw)
 
