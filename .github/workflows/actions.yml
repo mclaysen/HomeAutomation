@@ -28,3 +28,11 @@ jobs:
         run: |
           pip install pytest pytest-cov
           pytest tests --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
+
+      - name: Test Report
+        uses: dorny/test-reporter@v3
+        if: ${{ !cancelled() }}
+        with:
+          name: Python Tests
+          path: junit/test-results.xml
+          reporter: python-xunit
