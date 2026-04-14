@@ -21,7 +21,7 @@ class DoorSensorDiscovery(AbstractDiscoveryHandler):
             return {
                 "p": "event",
                 "name": name,
-                "value_template": "{{ 'cover_open' if (value_json.cmd | int(0)) == 7 else none }}",
+                "value_template": "{{ '{ \"event_type\": \"cover_open\" }' if (value_json.cmd | int(0)) == 7 else '{}' }}",
                 "event_types": ["cover_open"],
                 "unique_id": self.getUniquePrefix("coverstate")
             }
@@ -60,7 +60,7 @@ class DoorSensorDiscovery(AbstractDiscoveryHandler):
                 "batteryStatus": {
                     "p": "event",
                     "name": self.sensorName + " Battery Status",
-                    "value_template": "{{ 'battery_low' if (value_json.cmd | int(0)) == 6 else none }}",
+                    "value_template": "{{ '{ \"event_type\": \"battery_low\" }' if (value_json.cmd | int(0)) == 6 else '{}' }}",
                     "event_types": ["battery_low"],
                     "unique_id": self.getUniquePrefix("battery")
                 },
