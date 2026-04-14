@@ -1,6 +1,5 @@
 import uuid
 import paho.mqtt.client as mqtt
-from paho.mqtt.client import Client
 from mqttHandlers.publisherModel import Publisher
 from mqttHandlers.pubSub import PubSub
 import logging

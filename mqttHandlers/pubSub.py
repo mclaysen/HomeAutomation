@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Callable
 from paho.mqtt.client import Client
-import paho.mqtt.client as mqtt
 import uuid
 import logging
 import logging.config
@@ -47,7 +45,7 @@ class PubSub(ABC):
 
         # Subscribing in on_connect() means that if we lose the connection and
         # reconnect then subscriptions will be renewed.
-        if(self.topic != None):
+        if(self.topic is not None):
             client.subscribe(self.topic)
     
     def disconnect(self, client : Client, userdata, rc) -> None:

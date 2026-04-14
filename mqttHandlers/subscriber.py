@@ -4,8 +4,8 @@ from paho.mqtt.client import Client
 import uuid
 import logging
 import logging.config
-import time
 from mqttHandlers.pubSub import PubSub
+
 class MqttSubcriber(PubSub):
     def __init__(self, subscriberData: Subscriber, logger: logging.Logger) :
         super().__init__(subscriberData.callback, subscriberData.topic, logger)
