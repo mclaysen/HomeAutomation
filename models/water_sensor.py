@@ -1,3 +1,5 @@
+from utilities import normalize_timestamp
+
 class WaterSensorData:
     def __init__(self, time: str, model: str, id: int, event: str, code: str, mic: str, detect_wet: bool | None = None, battery_ok: float | None = None, battery_mV: int | None = None, leak_num: int | None = None) -> None:
         self.time = time
@@ -11,6 +13,13 @@ class WaterSensorData:
         self.battery_mV = battery_mV
         self.leak_num = leak_num
 
+    @property
+    def time(self) -> str:
+        return self._time
+
+    @time.setter
+    def time(self, value: str) -> None:
+        self._time = normalize_timestamp(value)
 
     @classmethod
     def from_dict(cls, data: dict) -> 'WaterSensorData':
