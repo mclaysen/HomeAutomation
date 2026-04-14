@@ -1,4 +1,4 @@
-from utilities.normalize_timestamps import normalize_timestamp
+from utilities import normalize_timestamp
 
 class TempSensorData:
     def __init__(self, time: str, model: str, id: int, channel: str, battery_ok: int, temperature_C: float, humidity: int, mic: str) -> None:
