@@ -6,6 +6,7 @@ import os
 from log import MqttLogger
 from models.sensorMappings import Config
 from models.sensorTypes import SensorType
+from mqttHandlers import messageHandlerFactory
 from mqttHandlers.publisher import MqttPublisher
 from mqttHandlers.rtlSub import RTLSub
 from mqttHandlers.subscriberModel import Subscriber
@@ -78,19 +79,20 @@ def on_ha_status(client, userdata, message):
 homeassistantclient = connect_homeassistant()
 publish_discovery(homeassistantclient, appsettings)
 
-dtesub = Subscriber(appsettings.DTE_IP, 2883, "event/metering/#", on_message_dte)
+dtesub = Subscriber(appsettings.DTE_IP, 2883, "event/metering/#")
 dtesubclient = MqttSubcriber(dtesub, logger)
 logger.info("Connecting to DTE at %s", appsettings.DTE_IP)
-dtesubclient.connect()
+dtesubclient.connect(on_message_dte)
 
-rtlSub = RTLSub(appsettings.RTL_IP, appsettings.ModelMappings, homeassistantclient, logger)
-subscriberData = Subscriber(appsettings.RTL_IP, 1883, "rtl_433/+/events/#", rtlSub.on_message)
-rtlSub.init_subscriber(appsettings.RTL_IP, 1883, "rtl_433/+/events/#", rtlSub.on_message)
+subscriberData = Subscriber(appsettings.RTL_IP, 1883, "rtl_433/+/events/#")
+messabgeHandlerFactory = messageHandlerFactory.MessageHandlerFactory(subscriberData, logger)
+sub = MqttSubcriber(subscriberData, logger)
+rtlSub = RTLSub(appsettings.RTL_IP, appsettings.ModelMappings, homeassistantclient, sub, messageHandlerFactory, logger)
 rtlSub.connect()
 
-ha_status_sub = Subscriber(appsettings.HOMEASSISTANT_IP, 1883, "homeassistant/status", on_ha_status)
+ha_status_sub = Subscriber(appsettings.HOMEASSISTANT_IP, 1883, "homeassistant/status")
 ha_status_client = MqttSubcriber(ha_status_sub, logger)
-ha_status_client.connect()
+ha_status_client.connect(on_ha_status)
 
 def exit_gracefully(signum, frame):
     print("exiting")

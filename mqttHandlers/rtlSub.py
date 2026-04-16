@@ -1,30 +1,26 @@
 import json
 import logging
-from typing import Any, List
+from typing import List
 from models.door_sensor import DoorSensorData
 from models.sensorMappings import ModelMapping
 from models.temp_sensor import TempSensorData
 from models.water_sensor import WaterSensorData
+from mqttHandlers.ports.messageHandlerFactoryPort import MessageHandlerFactoryPort
 from mqttHandlers.ports.publisherPort import PublisherPort
 from mqttHandlers.ports.subscriberPort import SubscriberPort
-from mqttHandlers.subscriberModel import Subscriber
-from typing import Callable
 
 class RTLSub:
-    def __init__(self, ip : str, modelMappings : List[ModelMapping], publisher : PublisherPort, subscriberPort: SubscriberPort, logger: logging.Logger):
+    def __init__(self, ip : str, modelMappings : List[ModelMapping], publisher : PublisherPort, subscriberPort: SubscriberPort, messageHandlerFactory: MessageHandlerFactoryPort, logger: logging.Logger):
         self.logger = logger
         self.publisher =  publisher
         self.modelMappings = modelMappings
         self.ip = ip
-        self.subscriber = subscriberPort(logger)
-    
-    def define_callback(self, callback: Callable[[Any], None]) -> None:
-        subscriberData = Subscriber(self.ip, 1883, "rtl_433/+/events/#", self.on_message)
-        self.subscriber
+        self.subscriber = subscriberPort
+        self.messageHandlerFactory = messageHandlerFactory
 
     def connect(self) -> None:
         self.logger.info("Connecting to RTL at %s", self.ip)
-        self.subscriber.connect()
+        self.subscriber.connect(self.messageHandlerFactory.on_message)
     
     def quit(self) -> None:
         self.subscriber.quit()
