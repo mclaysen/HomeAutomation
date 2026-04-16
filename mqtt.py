@@ -84,6 +84,8 @@ logger.info("Connecting to DTE at %s", appsettings.DTE_IP)
 dtesubclient.connect()
 
 rtlSub = RTLSub(appsettings.RTL_IP, appsettings.ModelMappings, homeassistantclient, logger)
+subscriberData = Subscriber(appsettings.RTL_IP, 1883, "rtl_433/+/events/#", rtlSub.on_message)
+rtlSub.init_subscriber(appsettings.RTL_IP, 1883, "rtl_433/+/events/#", rtlSub.on_message)
 rtlSub.connect()
 
 ha_status_sub = Subscriber(appsettings.HOMEASSISTANT_IP, 1883, "homeassistant/status", on_ha_status)

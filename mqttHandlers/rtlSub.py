@@ -1,23 +1,26 @@
 import json
 import logging
-import logging.config
-from typing import List
+from typing import Any, List
 from models.door_sensor import DoorSensorData
 from models.sensorMappings import ModelMapping
 from models.temp_sensor import TempSensorData
 from models.water_sensor import WaterSensorData
-from mqttHandlers.publisher import MqttPublisher
-from mqttHandlers.subscriber import MqttSubcriber
+from mqttHandlers.ports.publisherPort import PublisherPort
+from mqttHandlers.ports.subscriberPort import SubscriberPort
 from mqttHandlers.subscriberModel import Subscriber
+from typing import Callable
 
 class RTLSub:
-    def __init__(self, ip : str, modelMappings : List[ModelMapping], publisher : MqttPublisher, logger: logging.Logger):
+    def __init__(self, ip : str, modelMappings : List[ModelMapping], publisher : PublisherPort, subscriberPort: SubscriberPort, logger: logging.Logger):
         self.logger = logger
-        self.publisher=  publisher
+        self.publisher =  publisher
         self.modelMappings = modelMappings
         self.ip = ip
-        subscriberData = Subscriber(ip, 1883, "rtl_433/+/events/#", self.on_message)
-        self.subscriber = MqttSubcriber(subscriberData, logger)
+        self.subscriber = subscriberPort(logger)
+    
+    def define_callback(self, callback: Callable[[Any], None]) -> None:
+        subscriberData = Subscriber(self.ip, 1883, "rtl_433/+/events/#", self.on_message)
+        self.subscriber
 
     def connect(self) -> None:
         self.logger.info("Connecting to RTL at %s", self.ip)
@@ -26,7 +29,7 @@ class RTLSub:
     def quit(self) -> None:
         self.subscriber.quit()
 
-    def on_message(self, client, userdata, message) -> None:
+    def on_message_old(self, message) -> None:
         try:
             payload = message.payload.decode("utf-8")
             payload_obj = json.loads(payload)
@@ -64,7 +67,3 @@ class RTLSub:
                 self.logger.debug("Ignoring unsupported model: %s", payload_obj.get("model"))
         except Exception as e:
             self.logger.error("Error parsing payload for RTL message %s. Exception: %s", message.payload, e)
-    
-
-
-    

@@ -7,7 +7,7 @@ import logging.config
 
 class MqttPublisher(PubSub):
     def __init__(self, publisherData: Publisher, logger: logging.Logger) -> None:
-        super().__init__(None, None, logger)
+        super().__init__(None, logger)
         self.clientId = str(uuid.uuid4())
         self.client = None
         self.publisherData = publisherData
