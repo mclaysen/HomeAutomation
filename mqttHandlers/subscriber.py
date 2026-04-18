@@ -7,7 +7,7 @@ import logging.config
 from mqttHandlers.pubSub import PubSub
 from typing import Callable, Any
 
-class MqttSubcriber(PubSub):
+class MqttSubscriber(PubSub):
     def __init__(self, subscriberData: Subscriber, logger: logging.Logger) :
         super().__init__(subscriberData.topic, logger)
         self.subsciberData = subscriberData

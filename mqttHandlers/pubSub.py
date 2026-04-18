@@ -12,11 +12,14 @@ class PubSub(ABC):
         self.clientId = str(uuid.uuid4())
         self.topic = topic
         self.logger = logger
+        self.callback = None
 
     @abstractmethod
     def connect(self) -> None:
         self.logger.info("test")
     
+    def _setCallback(self, callback) -> None:
+        self.callback = callback
 
     def publish(self, topic, payload, qos, retain) -> None:
         if(self.client is None):
