@@ -14,6 +14,7 @@ class MessageHandler:
         self.appSettings = appSettings
         self.publisher = publisher
         self.logger = logger
+        
     
     def on_message(self, payload: T) -> None:
         try:

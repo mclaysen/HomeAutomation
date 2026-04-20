@@ -5,6 +5,7 @@ import logging
 from models.water_sensor import WaterSensorData
 from mqttHandlers.messageHandler import MessageHandler
 from models.temp_sensor import TempSensorData
+from mqttHandlers.subscriber import MqttSubscriber
 from mqttHandlers.subscriberModel import Subscriber
 import json
 from typing import TypeVar
@@ -19,6 +20,8 @@ class MessageHandlerFactory:
         self.appSettings = appSettings
         self.logger = logger
         self.publisher = publisher
+        subscriber = MqttSubscriber(subscriberData, logger)
+        subscriber.connect(self.on_message)
 
     def create_message_handler(self, sensorType: SensorType) -> MessageHandler:
         if sensorType == SensorType.TEMP_SENSOR:
