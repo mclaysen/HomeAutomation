@@ -15,11 +15,16 @@ class MqttSubscriber(PubSub):
         self.client = None
         self.logger = logger
 
-    def connect(self, callback: Callable[[Any], None]) -> Client:
+    def connect(self, callback: Callable[[Any], None] = None) -> Client:
+        if callback is not None:
+            self.callback = callback
         self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, self.clientId, clean_session=False)
         self.client.on_connect = self.on_connect
         self.client.on_disconnect = self.disconnect
-        self.client.on_message = callback
+        if self.callback is not None:
+            self.client.on_message = self.callback
+        else:
+            self.logger.warning("No callback provided for subscriber %s", self.clientId)
         self.logger.info("Connecting to %s, client id %s", self.subsciberData.ip, self.clientId)
         self._startSubscriber(self.subsciberData.ip, self.subsciberData.port)
         return self.client

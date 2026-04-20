@@ -1,5 +1,5 @@
 class Subscriber:
-    def __init__(self, ip, port, topic) -> None:
+    def __init__(self, ip, port, topic):
         self.ip = ip
         self.port = port
         self.topic = topic

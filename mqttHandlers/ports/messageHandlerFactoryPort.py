@@ -5,5 +5,5 @@ from mqttHandlers.ports.messageHandlerPort import MessageHandlerPort
 class MessageHandlerFactoryPort(Protocol):
     def create_message_handler[T](self, sensorType: SensorType) -> MessageHandlerPort[T]:
         ...
-    def on_message(self, message) -> None:
+    def on_message(self, client, userdata, message) -> None:
         ...
