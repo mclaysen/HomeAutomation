@@ -14,6 +14,7 @@ from mqttHandlers.subscriber import MqttSubscriber
 from models.energyData import EnergyData, EnergyType
 from mqttHandlers.publisherModel import Publisher
 from discoveryHandlers.discoveryFactory import DiscoveryFactory
+from models.deviceType import DeviceType
 
 
 logger = MqttLogger("console_logger").getLogger()
@@ -46,7 +47,7 @@ def connect_homeassistant() -> MqttPublisher:
     username = config.get('HOMEASSISTANT', 'USER')
     password = config.get('HOMEASSISTANT', 'PASSWORD')
     homeassistantip = appsettings.HOMEASSISTANT_IP
-    publiserData = Publisher(homeassistantip, 1883, username, password)
+    publiserData = Publisher(DeviceType.HOME_ASSISTANT, homeassistantip, 1883, username, password)
     client = MqttPublisher(publisherData=publiserData, logger=logger)
     logger.info("Connecting to Home Assistant at %s", homeassistantip)
     client.connect()
@@ -79,18 +80,18 @@ def on_ha_status(client, userdata, message):
 homeassistantclient = connect_homeassistant()
 publish_discovery(homeassistantclient, appsettings)
 
-dtesub = Subscriber(appsettings.DTE_IP, 2883, "event/metering/#")
+dtesub = Subscriber(DeviceType.DTE_METER, appsettings.DTE_IP, 2883, "event/metering/#")
 dtesubclient = MqttSubscriber(dtesub, logger)
 logger.info("Connecting to DTE at %s", appsettings.DTE_IP)
 dtesubclient.connect(on_message_dte)
 
-subscriberData = Subscriber(appsettings.RTL_IP, 1883, "rtl_433/+/events/#")
+subscriberData = Subscriber(DeviceType.RF_433, appsettings.RTL_IP, 1883, "rtl_433/+/events/#")
 messageHandlerFactory = MessageHandlerFactory(subscriberData, homeassistantclient, appsettings, logger)
 #sub = MqttSubscriber(subscriberData, logger)
 #rtlSub = RTLSub(appsettings.RTL_IP, appsettings.ModelMappings, homeassistantclient, sub, messageHandlerFactory, logger)
 #rtlSub.connect()
 
-ha_status_sub = Subscriber(appsettings.HOMEASSISTANT_IP, 1883, "homeassistant/status")
+ha_status_sub = Subscriber(DeviceType.HOME_ASSISTANT, appsettings.HOMEASSISTANT_IP, 1883, "homeassistant/status")
 ha_status_client = MqttSubscriber(ha_status_sub, logger)
 ha_status_client.connect(on_ha_status)
 

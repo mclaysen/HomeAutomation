@@ -4,12 +4,14 @@ import uuid
 import logging
 import logging.config
 import time
+from models.deviceType import DeviceType
 
 
 class PubSub(ABC):
-    def __init__(self, topic : str , logger: logging.Logger):
+    def __init__(self, deviceType: DeviceType, topic: str | None, logger: logging.Logger):
         self.client = None
         self.clientId = str(uuid.uuid4())
+        self.deviceType = deviceType
         self.topic = topic
         self.logger = logger
         self.callback = None

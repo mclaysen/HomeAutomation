@@ -23,7 +23,7 @@ class MessageHandlerFactory:
         subscriber = MqttSubscriber(subscriberData, logger)
         subscriber.connect(self.on_message)
 
-    def create_message_handler(self, sensorType: SensorType) -> MessageHandler:
+    def __create_message_handler(self, sensorType: SensorType) -> MessageHandler:
         if sensorType == SensorType.TEMP_SENSOR:
             return MessageHandler(self.subscriberData, self.appSettings, self.publisher, self.logger)
         else:
@@ -35,15 +35,17 @@ class MessageHandlerFactory:
             payload_obj = json.loads(payload)
             self.logger.debug(payload)
 
+
+
             match payload_obj["model"]:
                 case "Acurite-Tower":
-                    messageHander = self.create_message_handler(SensorType.TEMP_SENSOR)
+                    messageHander = self.__create_message_handler(SensorType.TEMP_SENSOR)
                     casted_payload = TempSensorData.from_dict(payload_obj)
                     messageHander.on_message(casted_payload)
                 case "Generic-Remote":
-                    messageHander = self.create_message_handler(SensorType.DOOR_SENSOR)
+                    messageHander = self.__create_message_handler(SensorType.DOOR_SENSOR)
                 case "Govee-Water":
-                    messageHander = self.create_message_handler(SensorType.WATER_SENSOR)
+                    messageHander = self.__create_message_handler(SensorType.WATER_SENSOR)
                 case _:
                     self.logger.warning("Unknown model: %s", payload_obj["model"])
                     return

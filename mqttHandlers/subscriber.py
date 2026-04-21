@@ -9,7 +9,7 @@ from typing import Callable, Any
 
 class MqttSubscriber(PubSub):
     def __init__(self, subscriberData: Subscriber, logger: logging.Logger) :
-        super().__init__(subscriberData.topic, logger)
+        super().__init__(subscriberData.deviceType, subscriberData.topic, logger)
         self.subsciberData = subscriberData
         self.clientId = str(uuid.uuid4())
         self.client = None
