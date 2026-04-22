@@ -1,5 +1,7 @@
-from typing import Protocol
+from typing import Protocol, TypeVar
 
-class MessageHandlerPort[T](Protocol):
-    def on_message(self, payload) -> list[str]:
+T = TypeVar('T')
+
+class MessageHandlerPort(Protocol):
+    def on_message(self, payload: T) -> None:
         ...
