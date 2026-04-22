@@ -1,8 +1,4 @@
-from enum import Enum
-
-class EnergyType(Enum):
-    INSTANT = 'instant'
-    MINUTE = 'minute'
+from models.energyType import EnergyType
 
 class EnergyData:
     def __init__(self, type: EnergyType, time: int, value: float) -> None:
@@ -24,7 +20,7 @@ class EnergyData:
 
     def to_dict(self):
         return {
-            'type': self.type,
+            'type': self.type.value,
             'time': self.time,
             'value': self.value
         }
