@@ -1,15 +1,13 @@
 import json
 import logging
-
 from models.sensorMappings import Config
 from mqttHandlers.subscriberModel import Subscriber
 from typing import TypeVar
 from mqttHandlers.publisher import MqttPublisher
 
+T = TypeVar('T')
 
-T = TypeVar('T', )
-
-class MessageHandler:
+class RtlMessageHandler:
     def __init__(self, subscriberData: Subscriber,  appSettings: Config,  publisher: MqttPublisher, logger: logging.Logger):
         self.appSettings = appSettings
         self.publisher = publisher
@@ -19,10 +17,7 @@ class MessageHandler:
     
     def on_message(self, payload: T) -> None:
         self.logger.debug(payload)
-        
-
         try:
-            
             tempModel = next(model for model in self.appSettings.ModelMappings if model.model == payload.model)
             if(tempModel is not None):
                 sensor = next(sensor for sensor in tempModel.sensors if sensor.id == payload.id)
