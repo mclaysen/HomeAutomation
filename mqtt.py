@@ -10,7 +10,6 @@ from mqttHandlers.publisher import MqttPublisher
 from mqttHandlers.rtlSub import RTLSub
 from mqttHandlers.subscriberModel import Subscriber
 from mqttHandlers.subscriber import MqttSubscriber
-from models.energyData import EnergyData, EnergyType
 from mqttHandlers.publisherModel import Publisher
 from models.deviceType import DeviceType
 from discoveryHandlers.publishDiscovery import publish_discovery
@@ -27,21 +26,7 @@ with open(config_json) as f:
     data = json.load(f)
     appsettings = Config.from_dict(data)
 
-def on_message_dte(client, userdata, message):
-    try:
-        powerData = message.payload.decode("utf-8")
-
-        decodedEnergyData = EnergyData.from_dict(json.loads(powerData))
-        logger.debug(powerData)
-        if decodedEnergyData.type == EnergyType.INSTANT:
-            homeassistantclient.publish("energy/meter/instant",powerData, 0, False)
-        else:
-            homeassistantclient.publish("energy/meter/summary",powerData, 0, False)
-    except Exception as e:
-        logger.error("Error parsing payload for DTE. Exception: %s", e)
-
 def connect_homeassistant() -> MqttPublisher:
-    
     username = config.get('HOMEASSISTANT', 'USER')
     password = config.get('HOMEASSISTANT', 'PASSWORD')
     homeassistantip = appsettings.HOMEASSISTANT_IP
@@ -63,12 +48,8 @@ publish_discovery(homeassistantclient, appsettings)
 dtesub = Subscriber(DeviceType.ENERGY_METER, appsettings.DTE_IP, 2883, "event/metering/#")
 messageHandlerFactoryDte = MessageHandlerFactory(dtesub, homeassistantclient, appsettings, logger)
 
-dtesubclient = MqttSubscriber(dtesub, logger)
-logger.info("Connecting to DTE at %s", appsettings.DTE_IP)
-#dtesubclient.connect(on_message_dte)
-
 subscriberData = Subscriber(DeviceType.RF_433, appsettings.RTL_IP, 1883, "rtl_433/+/events/#")
-#messageHandlerFactoryRtl = MessageHandlerFactory(subscriberData, homeassistantclient, appsettings, logger)
+messageHandlerFactoryRtl = MessageHandlerFactory(subscriberData, homeassistantclient, appsettings, logger)
 
 ha_status_sub = Subscriber(DeviceType.HOME_ASSISTANT, appsettings.HOMEASSISTANT_IP, 1883, "homeassistant/status")
 ha_status_client = MqttSubscriber(ha_status_sub, logger)
@@ -77,8 +58,8 @@ ha_status_client.connect(on_ha_status)
 def exit_gracefully(signum, frame):
     print("exiting")
     homeassistantclient.quit()
-    dtesubclient.quit()
-    rtlSub.quit()
+    messageHandlerFactoryDte.close()
+    messageHandlerFactoryRtl.close()
 
     sys.exit(0)
 

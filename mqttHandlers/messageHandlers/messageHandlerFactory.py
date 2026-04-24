@@ -23,8 +23,8 @@ class MessageHandlerFactory:
         self.appSettings = appSettings
         self.logger = logger
         self.publisher = publisher
-        subscriber = MqttSubscriber(subscriberData, logger)
-        subscriber.connect(self.on_message)
+        self.subscriber = MqttSubscriber(subscriberData, logger)
+        self.subscriber.connect(self.on_message)
 
     def __create_message_handler(self) -> MessageHandlerPort:
         if self.subscriberData.deviceType == DeviceType.RF_433:
@@ -33,7 +33,12 @@ class MessageHandlerFactory:
             return EnergyMessageHandler(self.subscriberData, self.appSettings, self.publisher, self.logger)
         else:
             raise ValueError(f"Unsupported sensor type: {self.subscriberData.deviceType}")
-        
+
+    def close(self):
+        self.subscriber.quit()
+        self.subscriber = None
+        self.logger.info("Closed subscriber for device type: %s", self.subscriberData.deviceType)
+
     def on_message(self, client, userdata, message) -> None:
         try:
             payload = message.payload.decode("utf-8")
