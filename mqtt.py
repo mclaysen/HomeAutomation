@@ -5,7 +5,6 @@ import configparser
 import os
 from log import MqttLogger
 from models.sensorMappings import Config
-from models.sensorTypes import SensorType
 from mqttHandlers.messageHandlers.messageHandlerFactory import MessageHandlerFactory
 from mqttHandlers.publisher import MqttPublisher
 from mqttHandlers.rtlSub import RTLSub
@@ -13,9 +12,8 @@ from mqttHandlers.subscriberModel import Subscriber
 from mqttHandlers.subscriber import MqttSubscriber
 from models.energyData import EnergyData, EnergyType
 from mqttHandlers.publisherModel import Publisher
-from discoveryHandlers.discoveryFactory import DiscoveryFactory
 from models.deviceType import DeviceType
-
+from discoveryHandlers.publishDiscovery import publish_discovery
 
 logger = MqttLogger("console_logger").getLogger()
 config = configparser.ConfigParser()
@@ -52,24 +50,6 @@ def connect_homeassistant() -> MqttPublisher:
     logger.info("Connecting to Home Assistant at %s", homeassistantip)
     client.connect()
     return client
-
-def publish_discovery(client, appSettings : Config) -> None:
-    tempDiscoveryFactory = DiscoveryFactory(SensorType.TEMP_SENSOR)
-    doorDiscoveryFactory = DiscoveryFactory(SensorType.DOOR_SENSOR)
-
-    for modelMapping in appSettings.ModelMappings:
-        if(modelMapping.sensorType == SensorType.TEMP_SENSOR):
-            for sensor in modelMapping.sensors:
-                discoveryObject = tempDiscoveryFactory.getDiscoveryObject(sensor.name, str(sensor.id), None)
-                discoveryTopic = discoveryObject.topic_for_discovery()
-                discoveryPayload = discoveryObject.getDiscoveryPayload("rtl_433/"+sensor.name)
-                client.publish(discoveryTopic, json.dumps(discoveryPayload), 1, True)
-        elif(modelMapping.sensorType == SensorType.DOOR_SENSOR):
-            for sensor in modelMapping.sensors:
-                discoveryObject = doorDiscoveryFactory.getDiscoveryObject(sensor.name, str(sensor.id), modelMapping.model)
-                discoveryTopic = discoveryObject.topic_for_discovery()
-                discoveryPayload = discoveryObject.getDiscoveryPayload("rtl_433/"+sensor.name)
-                client.publish(discoveryTopic, json.dumps(discoveryPayload), 1, True)
 
 def on_ha_status(client, userdata, message):
     status = message.payload.decode("utf-8").strip().lower()
