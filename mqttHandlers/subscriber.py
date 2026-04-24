@@ -19,6 +19,11 @@ class MqttSubscriber(PubSub):
         if callback is not None:
             self.callback = callback
         self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, self.clientId, clean_session=False)
+        if self.subsciberData.username is not None:
+            self.client.username_pw_set(
+                username=self.subsciberData.username,
+                password=self.subsciberData.password,
+            )
         self.client.on_connect = self.on_connect
         self.client.on_disconnect = self.disconnect
         if self.callback is not None:

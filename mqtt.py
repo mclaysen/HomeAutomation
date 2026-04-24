@@ -49,7 +49,14 @@ messageHandlerFactoryDte = MessageHandlerFactory(dtesub, homeassistantclient, ap
 subscriberData = Subscriber(DeviceType.RF_433, appsettings.RTL_IP, 1883, "rtl_433/+/events/#")
 messageHandlerFactoryRtl = MessageHandlerFactory(subscriberData, homeassistantclient, appsettings, logger)
 
-ha_status_sub = Subscriber(DeviceType.HOME_ASSISTANT, appsettings.HOMEASSISTANT_IP, 1883, "homeassistant/status")
+ha_status_sub = Subscriber(
+    DeviceType.HOME_ASSISTANT,
+    appsettings.HOMEASSISTANT_IP,
+    1883,
+    "homeassistant/status",
+    username=config.get('HOMEASSISTANT', 'USER'),
+    password=config.get('HOMEASSISTANT', 'PASSWORD'),
+)
 haClientFactory = MessageHandlerFactory(ha_status_sub, homeassistantclient, appsettings, logger)
 
 def exit_gracefully(signum, frame):
@@ -57,7 +64,7 @@ def exit_gracefully(signum, frame):
     homeassistantclient.quit()
     messageHandlerFactoryDte.close()
     messageHandlerFactoryRtl.close()
-
+    haClientFactory.close()
     sys.exit(0)
 
 signal.signal(signal.SIGTERM, exit_gracefully)
@@ -65,4 +72,4 @@ signal.signal(signal.SIGINT, exit_gracefully)
 signal.signal(signal.SIGQUIT, exit_gracefully)
 
 while True:
-    pass
+    signal.pause()

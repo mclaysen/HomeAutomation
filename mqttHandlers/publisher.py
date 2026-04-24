@@ -15,6 +15,5 @@ class MqttPublisher(PubSub):
     def connect(self) -> None :
         self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, self.clientId, clean_session=False)
         self.client.username_pw_set(username=self.publisherData.username,password=self.publisherData.password)
-        self.client.connect(self.publisherData.ip, self.publisherData.port)
         self.client.on_disconnect = self.disconnect
-        self.client.on_connect = self._startSubscriber(self.publisherData.ip, self.publisherData.port)
+        self._startSubscriber(self.publisherData.ip, self.publisherData.port)

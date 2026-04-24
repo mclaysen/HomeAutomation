@@ -53,7 +53,7 @@ class PubSub(ABC):
             client.subscribe(self.topic)
     
     def disconnect(self, client : Client, userdata, rc) -> None:
-        self.logger.warn("Disconnecting")
+        self.logger.error("Disconnecting")
         if self.client is not None:
             self.logger.info("Stopping loop")
             self.client.loop_stop()
