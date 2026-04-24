@@ -1,9 +1,9 @@
-import json
 import logging
 from models.sensorMappings import Config
 from mqttHandlers.subscriberModel import Subscriber
 from typing import TypeVar
 from mqttHandlers.publisher import MqttPublisher
+from discoveryHandlers.publishDiscovery import publish_discovery
 
 T = TypeVar('T')
 
@@ -13,17 +13,11 @@ class HomeAssistantMessageHandler:
         self.publisher = publisher
         self.logger = logger
         self.deviceType = subscriberData.deviceType
-        
-    
+
     def on_message(self, payload: T) -> None:
         self.logger.debug(payload)
         try:
-            tempModel = next(model for model in self.appSettings.ModelMappings if model.model == payload.model)
-            if(tempModel is not None):
-                sensor = next(sensor for sensor in tempModel.sensors if sensor.id == payload.id)
-                if(sensor is not None):
-                    self.publisher.publish("rtl_433/"+sensor.name, json.dumps(payload), 0, False)
-                else:
-                    self.logger.warning("No sensor found for %s", payload.id)
+            if payload == "online":
+                publish_discovery(self.publisher, self.appSettings)
         except Exception as e:
             self.logger.error("Error handling message: %s", e)

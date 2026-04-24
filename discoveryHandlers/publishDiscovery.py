@@ -2,8 +2,9 @@ from discoveryHandlers.discoveryFactory import DiscoveryFactory
 from models.sensorTypes import SensorType
 import json
 from models.sensorMappings import Config
+from mqttHandlers.publisher import MqttPublisher
 
-def publish_discovery(client, appSettings : Config) -> None:
+def publish_discovery(client : MqttPublisher, appSettings : Config) -> None:
     tempDiscoveryFactory = DiscoveryFactory(SensorType.TEMP_SENSOR)
     doorDiscoveryFactory = DiscoveryFactory(SensorType.DOOR_SENSOR)
 

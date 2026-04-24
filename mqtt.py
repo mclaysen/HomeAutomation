@@ -7,9 +7,7 @@ from log import MqttLogger
 from models.sensorMappings import Config
 from mqttHandlers.messageHandlers.messageHandlerFactory import MessageHandlerFactory
 from mqttHandlers.publisher import MqttPublisher
-from mqttHandlers.rtlSub import RTLSub
 from mqttHandlers.subscriberModel import Subscriber
-from mqttHandlers.subscriber import MqttSubscriber
 from mqttHandlers.publisherModel import Publisher
 from models.deviceType import DeviceType
 from discoveryHandlers.publishDiscovery import publish_discovery
@@ -52,8 +50,7 @@ subscriberData = Subscriber(DeviceType.RF_433, appsettings.RTL_IP, 1883, "rtl_43
 messageHandlerFactoryRtl = MessageHandlerFactory(subscriberData, homeassistantclient, appsettings, logger)
 
 ha_status_sub = Subscriber(DeviceType.HOME_ASSISTANT, appsettings.HOMEASSISTANT_IP, 1883, "homeassistant/status")
-ha_status_client = MqttSubscriber(ha_status_sub, logger)
-ha_status_client.connect(on_ha_status)
+haClientFactory = MessageHandlerFactory(ha_status_sub, homeassistantclient, appsettings, logger)
 
 def exit_gracefully(signum, frame):
     print("exiting")

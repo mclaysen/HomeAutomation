@@ -5,6 +5,7 @@ import logging
 from models.water_sensor import WaterSensorData
 from mqttHandlers.messageHandlers.rtlMessageHandler import RtlMessageHandler
 from mqttHandlers.messageHandlers.energyMessageHandler import EnergyMessageHandler
+from mqttHandlers.messageHandlers.homeAssistantHandler import HomeAssistantMessageHandler
 from models.temp_sensor import TempSensorData
 from mqttHandlers.subscriber import MqttSubscriber
 from mqttHandlers.subscriberModel import Subscriber
@@ -31,6 +32,8 @@ class MessageHandlerFactory:
             return RtlMessageHandler(self.subscriberData, self.appSettings, self.publisher, self.logger)
         elif self.subscriberData.deviceType == DeviceType.ENERGY_METER:
             return EnergyMessageHandler(self.subscriberData, self.appSettings, self.publisher, self.logger)
+        elif self.subscriberData.deviceType == DeviceType.HOME_ASSISTANT:
+            return HomeAssistantMessageHandler(self.subscriberData, self.appSettings, self.publisher, self.logger)
         else:
             raise ValueError(f"Unsupported sensor type: {self.subscriberData.deviceType}")
 
@@ -61,6 +64,7 @@ class MessageHandlerFactory:
             elif self.subscriberData.deviceType == DeviceType.ENERGY_METER:
                 casted_payload = EnergyData.from_dict(payload_obj)
             elif self.subscriberData.deviceType == DeviceType.HOME_ASSISTANT:
+                casted_payload = payload.strip().lower()
                 return
             messageHander.on_message(casted_payload)
 
