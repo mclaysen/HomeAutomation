@@ -45,12 +45,12 @@ class MessageHandlerFactory:
     def on_message(self, client, userdata, message) -> None:
         try:
             payload = message.payload.decode("utf-8")
-            payload_obj = json.loads(payload)
             self.logger.debug(payload)
 
             messageHander = self.__create_message_handler()
             casted_payload = None
             if self.subscriberData.deviceType == DeviceType.RF_433:
+                payload_obj = json.loads(payload)
                 match payload_obj["model"]:
                     case "Acurite-Tower":
                         casted_payload = TempSensorData.from_dict(payload_obj)
@@ -62,10 +62,10 @@ class MessageHandlerFactory:
                         self.logger.warning("Unknown model: %s", payload_obj["model"])
                         return
             elif self.subscriberData.deviceType == DeviceType.ENERGY_METER:
+                payload_obj = json.loads(payload)
                 casted_payload = EnergyData.from_dict(payload_obj)
             elif self.subscriberData.deviceType == DeviceType.HOME_ASSISTANT:
-                casted_payload = payload.strip().lower()
-                return
+                casted_payload = str(payload.strip().lower())
             messageHander.on_message(casted_payload)
 
         except Exception as e:

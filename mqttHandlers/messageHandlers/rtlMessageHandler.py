@@ -22,7 +22,7 @@ class RtlMessageHandler:
             if(tempModel is not None):
                 sensor = next(sensor for sensor in tempModel.sensors if sensor.id == payload.id)
                 if(sensor is not None):
-                    self.publisher.publish("rtl_433/"+sensor.name, json.dumps(payload), 0, False)
+                    self.publisher.publish("rtl_433/"+sensor.name, json.dumps(payload.to_dict()), 0, False)
                 else:
                     self.logger.warning("No sensor found for %s", payload.id)
         except Exception as e:

@@ -14,7 +14,7 @@ class HomeAssistantMessageHandler:
         self.logger = logger
         self.deviceType = subscriberData.deviceType
 
-    def on_message(self, payload: T) -> None:
+    def on_message(self, payload: str) -> None:
         self.logger.debug(payload)
         try:
             if payload == "online":
