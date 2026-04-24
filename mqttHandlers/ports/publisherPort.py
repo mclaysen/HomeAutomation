@@ -1,5 +1,5 @@
-from typing import Protocol
+from abc import ABC
+from mqttHandlers.pubSub import PubSub
 
-class PublisherPort(Protocol):
-    def connect(self):
-        ...
+class PublisherPort(PubSub, ABC):
+    pass

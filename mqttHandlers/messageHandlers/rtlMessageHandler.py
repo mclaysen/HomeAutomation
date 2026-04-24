@@ -1,14 +1,14 @@
 import json
 import logging
 from models.sensorMappings import Config
+from mqttHandlers.ports.publisherPort import PublisherPort
 from mqttHandlers.subscriberModel import Subscriber
 from typing import TypeVar
-from mqttHandlers.publisher import MqttPublisher
 
 T = TypeVar('T')
 
 class RtlMessageHandler:
-    def __init__(self, subscriberData: Subscriber,  appSettings: Config,  publisher: MqttPublisher, logger: logging.Logger):
+    def __init__(self, subscriberData: Subscriber,  appSettings: Config,  publisher: PublisherPort, logger: logging.Logger):
         self.appSettings = appSettings
         self.publisher = publisher
         self.logger = logger
