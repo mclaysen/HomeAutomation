@@ -24,3 +24,17 @@ class WaterSensorData:
     @classmethod
     def from_dict(cls, data: dict) -> 'WaterSensorData':
         return cls(**data)
+
+    def to_dict(self) -> dict:
+        return {
+            'time': self.time,
+            'model': self.model,
+            'id': self.id,
+            'event': self.event,
+            'code': self.code,
+            'mic': self.mic,
+            'detect_wet': self.detect_wet,
+            'battery_ok': self.battery_ok,
+            'battery_mV': self.battery_mV,
+            'leak_num': self.leak_num
+        }

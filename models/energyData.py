@@ -18,7 +18,7 @@ class EnergyData:
             value = data['value']
         return cls(energyType, data['time'], value)
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return {
             'type': self.type.value,
             'time': self.time,

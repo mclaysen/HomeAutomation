@@ -22,3 +22,15 @@ class TempSensorData:
     @classmethod
     def from_dict(cls, data: dict) -> 'TempSensorData':
         return cls(**data)
+
+    def to_dict(self) -> dict:
+        return {
+            'time': self.time,
+            'model': self.model,
+            'id': self.id,
+            'channel': self.channel,
+            'battery_ok': self.battery_ok,
+            'temperature_C': self.temperature_C,
+            'humidity': self.humidity,
+            'mic': self.mic
+        }
