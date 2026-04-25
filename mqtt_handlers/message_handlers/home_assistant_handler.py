@@ -1,8 +1,8 @@
 import logging
 from models.sensor_mappings import Config
-from mqttHandlers.subscriber_model import SubscriberModel
+from mqtt_handlers.subscriber_model import SubscriberModel
 from typing import TypeVar
-from mqttHandlers.mqtt_publisher import MqttPublisher
+from mqtt_handlers.mqtt_publisher import MqttPublisher
 from discovery_handlers.publish_discovery import publish_discovery
 
 T = TypeVar('T')
