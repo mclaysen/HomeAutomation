@@ -7,7 +7,7 @@ from typing import TypeVar
 
 T = TypeVar('T')
 
-class RtlMessageHandler:
+class GenericRtlMessageHandler:
     def __init__(self, subscriberData: SubscriberModel,  appSettings: Config,  publisher: PublisherPort, logger: logging.Logger):
         self.appSettings = appSettings
         self.publisher = publisher
@@ -17,9 +17,9 @@ class RtlMessageHandler:
     def on_message(self, payload: T) -> None:
         self.logger.debug(payload)
         try:
-            tempModel = next(model for model in self.appSettings.ModelMappings if model.model == payload.model)
-            if(tempModel is not None):
-                sensor = next(sensor for sensor in tempModel.sensors if sensor.id == payload.id)
+            model = next(model for model in self.appSettings.ModelMappings if model.model == payload.model)
+            if(model is not None):
+                sensor = next(sensor for sensor in model.sensors if sensor.id == payload.id)
                 if(sensor is not None):
                     self.publisher.publish("rtl_433/"+sensor.name, json.dumps(payload.to_dict()), 0, False)
                 else:

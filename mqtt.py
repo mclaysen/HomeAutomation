@@ -46,7 +46,7 @@ publish_discovery(homeassistantclient, appsettings)
 dtesub = SubscriberModel(DeviceType.ENERGY_METER, appsettings.DTE_IP, 2883, "event/metering/#")
 messageHandlerFactoryDte = MessageHandlerFactory(dtesub, homeassistantclient, appsettings, logger)
 
-subscriberData = SubscriberModel(DeviceType.RF_433, appsettings.RTL_IP, 1883, "rtl_433/+/events/#")
+subscriberData = SubscriberModel(DeviceType.GENERIC_RF_433, appsettings.RTL_IP, 1883, "rtl_433/+/events/#")
 messageHandlerFactoryRtl = MessageHandlerFactory(subscriberData, homeassistantclient, appsettings, logger)
 
 ha_status_sub = SecureSubscriberModel(

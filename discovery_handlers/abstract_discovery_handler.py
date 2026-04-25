@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from models.sensorTypes import SensorType
+from models.sensor_types import SensorType
 
 class AbstractDiscoveryHandler(ABC):
     def __init__(self, sensorType: SensorType, sensorName: str, sensorId: str, sensorModel: str | None = None) -> None:

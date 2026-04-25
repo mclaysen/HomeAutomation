@@ -9,15 +9,13 @@ from typing import Callable, Any
 
 class SecureMqttSubscriber(PubSub):
     def __init__(self, subscriberData: SecureSubscriberModel, logger: logging.Logger) :
+        super().__init__(subscriberData.deviceType, subscriberData.topic, logger)
         self.clientId = str(uuid.uuid4())
         self.client = None
         self.logger = logger
         self.username = subscriberData.username
         self.password = subscriberData.password
         self.subsciberData = subscriberData
-        self._check_credentials()
-
-        super().__init__(subscriberData.deviceType, subscriberData.topic, logger)
 
     def connect(self, callback: Callable[[Any], None] = None) -> Client:
         if callback is not None:

@@ -1,5 +1,5 @@
 from discovery_handlers.abstract_discovery_handler import AbstractDiscoveryHandler
-from models.sensorTypes import SensorType
+from models.sensor_types import SensorType
 
 
 class DoorSensorDiscovery(AbstractDiscoveryHandler):

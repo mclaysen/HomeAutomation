@@ -1,4 +1,4 @@
-from models.sensorTypes import SensorType
+from models.sensor_types import SensorType
 import discovery_handlers.abstract_discovery_handler as abstract_discovery_handler
 from discovery_handlers.temperature_humidity_discovery import TemperatureHumidityDiscovery
 from discovery_handlers.door_sensor_discovery import DoorSensorDiscovery

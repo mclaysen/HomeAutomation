@@ -1,7 +1,7 @@
 import uuid
 import paho.mqtt.client as mqtt
-from mqttHandlers.publisher_model import PublisherModel
-from mqttHandlers.ports.publisherPort import PublisherPort
+from mqtt_handlers.publisher_model import PublisherModel
+from mqtt_handlers.ports.publisher_port import PublisherPort
 import logging
 import logging.config
 
