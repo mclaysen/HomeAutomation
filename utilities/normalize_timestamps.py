@@ -1,7 +1,7 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-def normalize_timestamp(timestamp: str, timezone: str = "America/New_York") -> str | None:
+def normalize_timestamp(timestamp: str, timezone: str = "America/New_York") -> str:
     try:
         raw = timestamp.replace(" ", "T")
         dt = datetime.fromisoformat(raw)

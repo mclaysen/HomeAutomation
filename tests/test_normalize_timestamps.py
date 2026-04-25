@@ -17,3 +17,9 @@ def test_keeps_existing_timezone():
 def test_normalizes_space_separator():
     result = normalize_timestamp("2026-04-13 09:15:00")
     assert "T" in result
+
+def test_invalid_timestamp_throws_value_error():
+    try:
+        normalize_timestamp("invalid timestamp")
+    except ValueError as e:
+        assert str(e) == "Invalid timestamp format: invalid timestamp"
