@@ -1,6 +1,6 @@
 from typing import List
 
-from models.sensorTypes import SensorType
+from models.sensor_types import SensorType
 
 class SensorMapping:
     def __init__(self, name: str, id: int) -> None:

@@ -1,8 +1,8 @@
 import json
 import logging
 from models.sensor_mappings import Config
-from mqttHandlers.ports.publisherPort import PublisherPort
-from mqttHandlers.subscriber_model import SubscriberModel
+from mqtt_handlers.ports.publisher_port import PublisherPort
+from mqtt_handlers.subscriber_model import SubscriberModel
 from typing import TypeVar
 
 T = TypeVar('T')
