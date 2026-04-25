@@ -1,4 +1,4 @@
-from discoveryHandlers.discoveryFactory import DiscoveryFactory
+from discovery_handlers.discovery_factory import DiscoveryFactory
 from models.sensorTypes import SensorType
 import json
 from models.sensorMappings import Config

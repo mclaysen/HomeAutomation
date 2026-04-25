@@ -10,7 +10,7 @@ from mqttHandlers.publisher import MqttPublisher
 from mqttHandlers.subscriberModel import Subscriber
 from mqttHandlers.publisherModel import Publisher
 from models.deviceType import DeviceType
-from discoveryHandlers.publishDiscovery import publish_discovery
+from discovery_handlers.publish_discovery import publish_discovery
 
 logger = MqttLogger("console_logger").getLogger()
 config = configparser.ConfigParser()

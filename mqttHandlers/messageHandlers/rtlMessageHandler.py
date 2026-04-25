@@ -13,7 +13,6 @@ class RtlMessageHandler:
         self.publisher = publisher
         self.logger = logger
         self.deviceType = subscriberData.deviceType
-        
     
     def on_message(self, payload: T) -> None:
         self.logger.debug(payload)

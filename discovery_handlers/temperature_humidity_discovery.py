@@ -1,7 +1,7 @@
-from discoveryHandlers.abstractDiscoveryHandler import AbstractDiscoveryHandler
+from discovery_handlers.abstract_discovery_handler import AbstractDiscoveryHandler
 from models.sensorTypes import SensorType
 
-class TempHumidityDiscovery(AbstractDiscoveryHandler):
+class TemperatureHumidityDiscovery(AbstractDiscoveryHandler):
     def __init__(self, sensorName : str, sensorId: str) -> None:
         super().__init__(SensorType.TEMP_SENSOR, sensorName, sensorId, None)
         self.expireAfter = 180

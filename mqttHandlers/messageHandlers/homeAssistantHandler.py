@@ -3,7 +3,7 @@ from models.sensorMappings import Config
 from mqttHandlers.subscriberModel import Subscriber
 from typing import TypeVar
 from mqttHandlers.publisher import MqttPublisher
-from discoveryHandlers.publishDiscovery import publish_discovery
+from discovery_handlers.publish_discovery import publish_discovery
 
 T = TypeVar('T')
 
