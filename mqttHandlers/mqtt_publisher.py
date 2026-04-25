@@ -1,12 +1,12 @@
 import uuid
 import paho.mqtt.client as mqtt
-from mqttHandlers.publisherModel import Publisher
+from mqttHandlers.publisher_model import PublisherModel
 from mqttHandlers.ports.publisherPort import PublisherPort
 import logging
 import logging.config
 
 class MqttPublisher(PublisherPort):
-    def __init__(self, publisherData: Publisher, logger: logging.Logger) -> None:
+    def __init__(self, publisherData: PublisherModel, logger: logging.Logger) -> None:
         super().__init__(publisherData.deviceType, None, logger)
         self.clientId = str(uuid.uuid4())
         self.client = None

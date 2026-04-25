@@ -1,7 +1,7 @@
 from models.device_type import DeviceType
 
 
-class Subscriber:
+class SubscriberModel:
     def __init__(
         self,
         deviceType: DeviceType,

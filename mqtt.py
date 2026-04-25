@@ -6,9 +6,9 @@ import os
 from log import MqttLogger
 from models.sensor_mappings import Config
 from mqttHandlers.messageHandlers.messageHandlerFactory import MessageHandlerFactory
-from mqttHandlers.publisher import MqttPublisher
-from mqttHandlers.subscriberModel import Subscriber
-from mqttHandlers.publisherModel import Publisher
+from mqttHandlers.mqtt_publisher import MqttPublisher
+from mqttHandlers.subscriber_model import SubscriberModel
+from mqttHandlers.publisher_model import PublisherModel
 from models.device_type import DeviceType
 from discovery_handlers.publish_discovery import publish_discovery
 
@@ -28,7 +28,7 @@ def connect_homeassistant() -> MqttPublisher:
     username = config.get('HOMEASSISTANT', 'USER')
     password = config.get('HOMEASSISTANT', 'PASSWORD')
     homeassistantip = appsettings.HOMEASSISTANT_IP
-    publiserData = Publisher(DeviceType.HOME_ASSISTANT, homeassistantip, 1883, username, password)
+    publiserData = PublisherModel(DeviceType.HOME_ASSISTANT, homeassistantip, 1883, username, password)
     client = MqttPublisher(publisherData=publiserData, logger=logger)
     logger.info("Connecting to Home Assistant at %s", homeassistantip)
     client.connect()
@@ -43,13 +43,13 @@ def on_ha_status(client, userdata, message):
 homeassistantclient = connect_homeassistant()
 publish_discovery(homeassistantclient, appsettings)
 
-dtesub = Subscriber(DeviceType.ENERGY_METER, appsettings.DTE_IP, 2883, "event/metering/#")
+dtesub = SubscriberModel(DeviceType.ENERGY_METER, appsettings.DTE_IP, 2883, "event/metering/#")
 messageHandlerFactoryDte = MessageHandlerFactory(dtesub, homeassistantclient, appsettings, logger)
 
-subscriberData = Subscriber(DeviceType.RF_433, appsettings.RTL_IP, 1883, "rtl_433/+/events/#")
+subscriberData = SubscriberModel(DeviceType.RF_433, appsettings.RTL_IP, 1883, "rtl_433/+/events/#")
 messageHandlerFactoryRtl = MessageHandlerFactory(subscriberData, homeassistantclient, appsettings, logger)
 
-ha_status_sub = Subscriber(
+ha_status_sub = SubscriberModel(
     DeviceType.HOME_ASSISTANT,
     appsettings.HOMEASSISTANT_IP,
     1883,

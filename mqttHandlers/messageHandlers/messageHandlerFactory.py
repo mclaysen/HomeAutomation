@@ -7,11 +7,11 @@ from mqttHandlers.messageHandlers.rtlMessageHandler import RtlMessageHandler
 from mqttHandlers.messageHandlers.energyMessageHandler import EnergyMessageHandler
 from mqttHandlers.messageHandlers.homeAssistantHandler import HomeAssistantMessageHandler
 from models.temp_sensor import TempSensorData
-from mqttHandlers.subscriber import MqttSubscriber
-from mqttHandlers.subscriberModel import Subscriber
+from mqttHandlers.mqtt_subscriber import MqttSubscriber
+from mqttHandlers.subscriber_model import SubscriberModel
 import json
 from typing import TypeVar
-from mqttHandlers.publisher import MqttPublisher
+from mqttHandlers.mqtt_publisher import MqttPublisher
 from models.device_type import DeviceType
 from mqttHandlers.ports.messageHandlerPort import MessageHandlerPort
 
@@ -19,7 +19,7 @@ from mqttHandlers.ports.messageHandlerPort import MessageHandlerPort
 T = TypeVar('T')
 
 class MessageHandlerFactory:
-    def __init__(self, subscriberData: Subscriber, publisher: MqttPublisher, appSettings: Config, logger: logging.Logger):
+    def __init__(self, subscriberData: SubscriberModel, publisher: MqttPublisher, appSettings: Config, logger: logging.Logger):
         self.subscriberData = subscriberData
         self.appSettings = appSettings
         self.logger = logger

@@ -1,15 +1,15 @@
 import logging
 from models.sensor_mappings import Config
-from mqttHandlers.subscriberModel import Subscriber
+from mqttHandlers.subscriber_model import SubscriberModel
 from typing import TypeVar
-from mqttHandlers.publisher import MqttPublisher
-from models.enegy_type import EnergyType
+from mqttHandlers.mqtt_publisher import MqttPublisher
+from models.energy_type import EnergyType
 import json
 
 T = TypeVar('T')
 
 class EnergyMessageHandler:
-    def __init__(self, subscriberData: Subscriber,  appSettings: Config,  publisher: MqttPublisher, logger: logging.Logger):
+    def __init__(self, subscriberData: SubscriberModel,  appSettings: Config,  publisher: MqttPublisher, logger: logging.Logger):
         self.appSettings = appSettings
         self.publisher = publisher
         self.logger = logger

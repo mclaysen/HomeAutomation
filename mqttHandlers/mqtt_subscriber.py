@@ -1,14 +1,14 @@
 import paho.mqtt.client as mqtt
-from mqttHandlers.subscriberModel import Subscriber
+from mqttHandlers.subscriber_model import SubscriberModel
 from paho.mqtt.client import Client
 import uuid
 import logging
 import logging.config
-from mqttHandlers.pubSub import PubSub
+from mqttHandlers.pub_sub import PubSub
 from typing import Callable, Any
 
 class MqttSubscriber(PubSub):
-    def __init__(self, subscriberData: Subscriber, logger: logging.Logger) :
+    def __init__(self, subscriberData: SubscriberModel, logger: logging.Logger) :
         super().__init__(subscriberData.deviceType, subscriberData.topic, logger)
         self.subsciberData = subscriberData
         self.clientId = str(uuid.uuid4())
