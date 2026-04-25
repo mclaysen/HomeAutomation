@@ -1,4 +1,4 @@
-from models.deviceType import DeviceType
+from models.device_type import DeviceType
 
 
 class Publisher:

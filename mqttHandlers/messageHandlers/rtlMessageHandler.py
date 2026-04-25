@@ -1,6 +1,6 @@
 import json
 import logging
-from models.sensorMappings import Config
+from models.sensor_mappings import Config
 from mqttHandlers.ports.publisherPort import PublisherPort
 from mqttHandlers.subscriberModel import Subscriber
 from typing import TypeVar

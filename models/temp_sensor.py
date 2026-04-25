@@ -1,6 +1,6 @@
 from utilities import normalize_timestamp
 
-class TempSensorData:
+class TempSensor:
     def __init__(self, time: str, model: str, id: int, channel: str, battery_ok: int, temperature_C: float, humidity: int, mic: str) -> None:
         self.time = time
         self.model = model
@@ -20,7 +20,7 @@ class TempSensorData:
         self._time = normalize_timestamp(value)
 
     @classmethod
-    def from_dict(cls, data: dict) -> 'TempSensorData':
+    def from_dict(cls, data: dict) -> 'TempSensor':
         return cls(**data)
 
     def to_dict(self) -> dict:

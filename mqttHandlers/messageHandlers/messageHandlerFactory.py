@@ -1,8 +1,8 @@
 from models.door_sensor import DoorSensorData
-from models.energyData import EnergyData
-from models.sensorMappings import Config
+from models.energy_data import EnergyData
+from models.sensor_mappings import Config
 import logging
-from models.water_sensor import WaterSensorData
+from models.leak_sensor import WaterSensorData
 from mqttHandlers.messageHandlers.rtlMessageHandler import RtlMessageHandler
 from mqttHandlers.messageHandlers.energyMessageHandler import EnergyMessageHandler
 from mqttHandlers.messageHandlers.homeAssistantHandler import HomeAssistantMessageHandler
@@ -12,7 +12,7 @@ from mqttHandlers.subscriberModel import Subscriber
 import json
 from typing import TypeVar
 from mqttHandlers.publisher import MqttPublisher
-from models.deviceType import DeviceType
+from models.device_type import DeviceType
 from mqttHandlers.ports.messageHandlerPort import MessageHandlerPort
 
 

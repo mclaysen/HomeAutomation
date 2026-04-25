@@ -1,9 +1,9 @@
 import logging
-from models.sensorMappings import Config
+from models.sensor_mappings import Config
 from mqttHandlers.subscriberModel import Subscriber
 from typing import TypeVar
 from mqttHandlers.publisher import MqttPublisher
-from models.energyType import EnergyType
+from models.enegy_type import EnergyType
 import json
 
 T = TypeVar('T')

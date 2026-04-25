@@ -4,7 +4,7 @@ import uuid
 import logging
 import logging.config
 import time
-from models.deviceType import DeviceType
+from models.device_type import DeviceType
 
 
 class PubSub(ABC):

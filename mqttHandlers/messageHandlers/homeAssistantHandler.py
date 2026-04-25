@@ -1,5 +1,5 @@
 import logging
-from models.sensorMappings import Config
+from models.sensor_mappings import Config
 from mqttHandlers.subscriberModel import Subscriber
 from typing import TypeVar
 from mqttHandlers.publisher import MqttPublisher

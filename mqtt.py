@@ -4,12 +4,12 @@ import sys
 import configparser
 import os
 from log import MqttLogger
-from models.sensorMappings import Config
+from models.sensor_mappings import Config
 from mqttHandlers.messageHandlers.messageHandlerFactory import MessageHandlerFactory
 from mqttHandlers.publisher import MqttPublisher
 from mqttHandlers.subscriberModel import Subscriber
 from mqttHandlers.publisherModel import Publisher
-from models.deviceType import DeviceType
+from models.device_type import DeviceType
 from discovery_handlers.publish_discovery import publish_discovery
 
 logger = MqttLogger("console_logger").getLogger()
