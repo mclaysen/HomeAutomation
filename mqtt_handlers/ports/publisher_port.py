@@ -1,5 +1,5 @@
 from abc import ABC
-from mqttHandlers.pubSub import PubSub
+from mqtt_handlers.pub_sub import PubSub
 
 class PublisherPort(PubSub, ABC):
     pass
