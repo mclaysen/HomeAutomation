@@ -7,13 +7,13 @@ from mqtt_handlers.message_handlers.rtl_message_handler import RtlMessageHandler
 from mqtt_handlers.message_handlers.energy_message_handler import EnergyMessageHandler
 from mqtt_handlers.message_handlers.home_assistant_handler import HomeAssistantMessageHandler
 from models.temp_sensor import TempSensorData
-from mqtt_handlers.mqtt_subscriber import MqttSubscriber
-from mqtt_handlers.subscriber_model import SubscriberModel
+from mqtt_handlers.mqtt_subscriber import MqttSubscriber, SecureMqttSubscriber
+from mqtt_handlers.subscriber_model import SubscriberModel, SecureSubscriberModel
 import json
 from typing import TypeVar
 from mqtt_handlers.mqtt_publisher import MqttPublisher
 from models.device_type import DeviceType
-from mqtt_handlers.ports.messageHandlerPort import MessageHandlerPort
+from mqtt_handlers.ports.message_handler_port import MessageHandlerPort
 
 
 T = TypeVar('T')
@@ -24,7 +24,10 @@ class MessageHandlerFactory:
         self.appSettings = appSettings
         self.logger = logger
         self.publisher = publisher
-        self.subscriber = MqttSubscriber(subscriberData, logger)
+        if isinstance(subscriberData, SecureSubscriberModel):
+            self.subscriber = SecureMqttSubscriber(subscriberData, logger)
+        else:
+            self.subscriber = MqttSubscriber(subscriberData, logger)
         self.subscriber.connect(self.on_message)
 
     def __create_message_handler(self) -> MessageHandlerPort:
@@ -47,7 +50,7 @@ class MessageHandlerFactory:
             payload = message.payload.decode("utf-8")
             self.logger.debug(payload)
 
-            messageHander = self.__create_message_handler()
+            messageHandler = self.__create_message_handler()
             casted_payload = None
             if self.subscriberData.deviceType == DeviceType.RF_433:
                 payload_obj = json.loads(payload)
@@ -66,7 +69,7 @@ class MessageHandlerFactory:
                 casted_payload = EnergyData.from_dict(payload_obj)
             elif self.subscriberData.deviceType == DeviceType.HOME_ASSISTANT:
                 casted_payload = str(payload.strip().lower())
-            messageHander.on_message(casted_payload)
+            messageHandler.on_message(casted_payload)
 
         except Exception as e:
             self.logger.error("Error parsing payload. Exception: %s", e)

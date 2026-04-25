@@ -7,7 +7,7 @@ from log import MqttLogger
 from models.sensor_mappings import Config
 from mqtt_handlers.message_handlers.message_handler_factory import MessageHandlerFactory
 from mqtt_handlers.mqtt_publisher import MqttPublisher
-from mqtt_handlers.subscriber_model import SubscriberModel
+from mqtt_handlers.subscriber_model import SubscriberModel, SecureSubscriberModel
 from mqtt_handlers.publisher_model import PublisherModel
 from models.device_type import DeviceType
 from discovery_handlers.publish_discovery import publish_discovery
@@ -49,7 +49,7 @@ messageHandlerFactoryDte = MessageHandlerFactory(dtesub, homeassistantclient, ap
 subscriberData = SubscriberModel(DeviceType.RF_433, appsettings.RTL_IP, 1883, "rtl_433/+/events/#")
 messageHandlerFactoryRtl = MessageHandlerFactory(subscriberData, homeassistantclient, appsettings, logger)
 
-ha_status_sub = SubscriberModel(
+ha_status_sub = SecureSubscriberModel(
     DeviceType.HOME_ASSISTANT,
     appsettings.HOMEASSISTANT_IP,
     1883,
