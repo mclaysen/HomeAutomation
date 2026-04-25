@@ -1,4 +1,4 @@
-from models.energyType import EnergyType
+from models.energy_type import EnergyType
 
 class EnergyData:
     def __init__(self, type: EnergyType, time: int, value: float) -> None:

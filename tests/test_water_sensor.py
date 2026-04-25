@@ -1,5 +1,5 @@
 from assertpy import assert_that
-from models.water_sensor import WaterSensorData
+from models.leak_sensor import WaterSensorData
 
 def test_water_sensor_data_from_dict():
     data = {
