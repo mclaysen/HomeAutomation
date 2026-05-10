@@ -1,5 +1,6 @@
 import discovery_handlers.abstract_discovery_handler as abstract_discovery_handler
 from discovery_handlers.door_sensor_discovery import DoorSensorDiscovery
+from discovery_handlers.leak_sensor_discovery import LeakSensorDiscovery
 from discovery_handlers.temperature_humidity_discovery import (
     TemperatureHumidityDiscovery,
 )
@@ -17,5 +18,7 @@ class DiscoveryFactory:
             return TemperatureHumidityDiscovery(sensorName, sensorId)
         elif self.sensorType == SensorType.DOOR_SENSOR:
             return DoorSensorDiscovery(sensorName, sensorId, sensorModel)
+        elif self.sensorType == SensorType.LEAK_SENSOR:
+            return LeakSensorDiscovery(sensorName, sensorId, sensorModel)
         else:
             raise Exception("Invalid sensor type")

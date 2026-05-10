@@ -1,10 +1,10 @@
 from discovery_handlers.abstract_discovery_handler import AbstractDiscoveryHandler
-from models.sensorTypes import SensorType
+from models.sensor_types import SensorType
 
 
 class LeakSensorDiscovery(AbstractDiscoveryHandler):
     def __init__(self, sensorName: str, sensorId: str) -> None:
-        super().__init__(SensorType.WATER_SENSOR, sensorName, sensorId, None)
+        super().__init__(SensorType.LEAK_SENSOR, sensorName, sensorId, None)
         self.expireAfter = 180
         self.sensorName = sensorName.upper()
         self.sensorId = sensorId
@@ -34,6 +34,12 @@ class LeakSensorDiscovery(AbstractDiscoveryHandler):
                     "value_template": "{{ as_datetime(value_json.time) }}",
                     "unique_id": self.getUniquePrefix("readreceived"),
                     "name": self.sensorName + " Read Received",
+                },
+                "buttonPressed": {
+                    "p": "event",
+                    "device_class": "button",
+                    "name": self.sensorName + " Button Pressed",
+                    "unique_id": self.getUniquePrefix("buttonpressed"),
                 },
             },
             "qos": 0,

@@ -33,8 +33,8 @@ class AbstractDiscoveryHandler(ABC):
             type = "temperaturesensor"
         elif self.sensorType == SensorType.DOOR_SENSOR:
             type = "doorsensor"
-        elif self.sensorType == SensorType.WATER_SENSOR:
-            type = "watersensor"
+        elif self.sensorType == SensorType.LEAK_SENSOR:
+            type = "leaksensor"
         else:
             type = "unknownsensor"
         return self.sensorName + "_" + type + "_" + deviceClass

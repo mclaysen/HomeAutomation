@@ -35,7 +35,7 @@
     },
     {
       "Model": "Govee-Water",
-      "SensorType": "WATER_SENSOR",
+      "SensorType": "LEAK_SENSOR",
       "Sensors": [
         {
           "name": "kitchen_sink",
