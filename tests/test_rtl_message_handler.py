@@ -2,7 +2,9 @@ from assertpy import assert_that
 
 from models.sensor_mappings import Config, ModelMapping, SensorMapping
 from models.temp_sensor import TempSensor
-from mqtt_handlers.message_handlers.generic_rtl_message_handler import RtlMessageHandler
+from mqtt_handlers.message_handlers.generic_rtl_message_handler import (
+    GenericRtlMessageHandler,
+)
 from mqtt_handlers.subscriber_model import SubscriberModel
 from tests.fake_logger import FakeLogger
 from tests.fake_mqttsubscriber import FakeMqttPublisher
@@ -29,7 +31,7 @@ def test_rtl_message_handler_init():
         HOME_ASSISTANT_IP="127.0.0.1",
         ModelMappings=model_mapping,
     )
-    handler = RtlMessageHandler(subsciberData, configTest, publisher, logger)
+    handler = GenericRtlMessageHandler(subsciberData, configTest, publisher, logger)
 
     payload = TempSensor(
         time="2025-01-01T00:00:00Z",

@@ -87,12 +87,6 @@ class LeakSensorHandler:
                         0,
                         False,
                     )
-                    self.publisher.publish(
-                        f"{topic_prefix}/battery_report",
-                        json.dumps(battery_payload),
-                        0,
-                        False,
-                    )
                 elif payload.event == LeakSensorEvent.BUTTON_PRESS:
                     click_payload = self._get_button_click_report_payload(payload)
                     leak_payload = self._get_leak_report_payload(payload)
@@ -100,12 +94,6 @@ class LeakSensorHandler:
                     self.publisher.publish(
                         f"{topic_prefix}/leak_report",
                         json.dumps(leak_payload),
-                        0,
-                        False,
-                    )
-                    self.publisher.publish(
-                        f"{topic_prefix}/battery_report",
-                        json.dumps(battery_payload),
                         0,
                         False,
                     )
