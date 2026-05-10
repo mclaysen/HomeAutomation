@@ -1,5 +1,6 @@
 import enum
 
+
 class DeviceType(enum.Enum):
     GENERIC_RF_433 = 1
     ENERGY_METER = 2

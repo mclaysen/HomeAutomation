@@ -1,71 +1,71 @@
 {
-    "DTE_IP": "192.168.2.190",
-    "RTL_IP": "192.168.86.211",
-    "HOME_ASSISTANT_IP": "192.168.86.78",
-    "ModelMappings": [
-        { 
-            "Model": "Acurite-Tower",
-            "SensorType": "TEMP_SENSOR",
-            "Sensors":   [
-                {
-                    "name": "basement",
-                    "id": 5161
-                },
-                {
-                    "name": "main_floor",
-                    "id": 15881
-                },
-                {
-                    "name": "attic",
-                    "id": 14820
-                },
-                {
-                    "name":"garage",
-                    "id": 568
-                },
-                {
-                    "name":"outside",
-                    "id": 6278
-                },
-                {
-                    "name":"refrigerator",
-                    "id": 4888
-                }
-            ]
+  "DTE_IP": "192.168.2.190",
+  "RTL_IP": "192.168.86.211",
+  "HOME_ASSISTANT_IP": "192.168.86.78",
+  "ModelMappings": [
+    {
+      "Model": "Acurite-Tower",
+      "SensorType": "TEMP_SENSOR",
+      "Sensors": [
+        {
+          "name": "basement",
+          "id": 5161
         },
         {
-            "Model": "Govee-Water",
-            "SensorType": "WATER_SENSOR",
-            "Sensors": [
-                {
-                    "name": "kitchen_sink",
-                    "id": 7347
-                }
-            ]
-        },
-        { 
-            "Model":"Generic-Remote",
-            "SensorType": "DOOR_SENSOR",
-            "Sensors": [
-                {
-                    "name": "guest_closet",
-                    "id": 23112
-                },
-                {
-                    "name": "office_closet",
-                    "id": 10439
-                }
-            ]
+          "name": "main_floor",
+          "id": 15881
         },
         {
-            "Model": "Custom-Door-Sensor",
-            "SensorType": "DOOR_SENSOR",
-            "Sensors": [
-                {
-                    "name": "master_closet",
-                    "id": 30409
-                }
-            ]
+          "name": "attic",
+          "id": 14820
+        },
+        {
+          "name": "garage",
+          "id": 568
+        },
+        {
+          "name": "outside",
+          "id": 6278
+        },
+        {
+          "name": "refrigerator",
+          "id": 4888
         }
-    ]
+      ]
+    },
+    {
+      "Model": "Govee-Water",
+      "SensorType": "WATER_SENSOR",
+      "Sensors": [
+        {
+          "name": "kitchen_sink",
+          "id": 7347
+        }
+      ]
+    },
+    {
+      "Model": "Generic-Remote",
+      "SensorType": "DOOR_SENSOR",
+      "Sensors": [
+        {
+          "name": "guest_closet",
+          "id": 23112
+        },
+        {
+          "name": "office_closet",
+          "id": 10439
+        }
+      ]
+    },
+    {
+      "Model": "Custom-Door-Sensor",
+      "SensorType": "DOOR_SENSOR",
+      "Sensors": [
+        {
+          "name": "master_closet",
+          "id": 30409
+        }
+      ]
+    }
+  ]
 }

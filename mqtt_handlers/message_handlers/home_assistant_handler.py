@@ -1,14 +1,22 @@
 import logging
-from models.sensor_mappings import Config
-from mqtt_handlers.subscriber_model import SubscriberModel
 from typing import TypeVar
-from mqtt_handlers.mqtt_publisher import MqttPublisher
-from discovery_handlers.publish_discovery import publish_discovery
 
-T = TypeVar('T')
+from discovery_handlers.publish_discovery import publish_discovery
+from models.sensor_mappings import Config
+from mqtt_handlers.mqtt_publisher import MqttPublisher
+from mqtt_handlers.subscriber_model import SubscriberModel
+
+T = TypeVar("T")
+
 
 class HomeAssistantMessageHandler:
-    def __init__(self, subscriberData: SubscriberModel,  appSettings: Config,  publisher: MqttPublisher, logger: logging.Logger):
+    def __init__(
+        self,
+        subscriberData: SubscriberModel,
+        appSettings: Config,
+        publisher: MqttPublisher,
+        logger: logging.Logger,
+    ):
         self.appSettings = appSettings
         self.publisher = publisher
         self.logger = logger

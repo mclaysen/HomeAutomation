@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class BatteryLevel(Enum):
     EMPTY = 0
     LOW = 1

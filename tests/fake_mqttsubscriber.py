@@ -1,7 +1,7 @@
 from multiprocessing.dummy.connection import Client
-from typing import Any
+from typing import Any, Callable
+
 from mqtt_handlers.pub_sub import PubSub
-from typing import Callable
 
 
 class FakeMqttSubscriber(PubSub):
@@ -27,6 +27,7 @@ class FakeMqttSubscriber(PubSub):
         self.logger.info("Fake subscriber connected to topic %s", self.topic)
         return None
 
+
 class FakeMqttPublisher(PubSub):
 
     def __init__(self, logger):
@@ -39,7 +40,9 @@ class FakeMqttPublisher(PubSub):
 
     def publish(self, topic, payload, qos, retain) -> None:
         self._published_messages.append((topic, payload, qos, retain))
-        self.logger.info("Fake publisher published message to topic %s: %s", topic, payload)
+        self.logger.info(
+            "Fake publisher published message to topic %s: %s", topic, payload
+        )
 
     def connect(self, callback: Callable[[Any], None] = None) -> Client:
         if callback is not None:

@@ -1,7 +1,7 @@
 from typing import Protocol, TypeVar
 
-T = TypeVar('T')
+T = TypeVar("T")
+
 
 class MessageHandlerPort(Protocol):
-    def on_message(self, payload: T) -> None:
-        ...
+    def on_message(self, payload: T) -> None: ...

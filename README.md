@@ -5,6 +5,7 @@ Basic Home Automation services for receiving sensor data and publishing/handling
 ## Overview
 
 This repository contains scripts and modules for:
+
 - Reading sensor data (including rtl_433-based inputs)
 - Mapping sensor payloads into internal models
 - Publishing and subscribing to MQTT topics

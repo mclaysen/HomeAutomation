@@ -15,6 +15,7 @@ class SubscriberModel:
         self.topic = topic
         self.client = None
 
+
 class SecureSubscriberModel(SubscriberModel):
     def __init__(
         self,
@@ -23,7 +24,7 @@ class SecureSubscriberModel(SubscriberModel):
         port: int,
         topic: str,
         username: str,
-        password: str
+        password: str,
     ):
         super().__init__(deviceType, ip, port, topic)
         self.username = username

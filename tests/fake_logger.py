@@ -1,5 +1,6 @@
 from logging import Logger
 
+
 class FakeLogger(Logger):
     def __init__(self):
         self.logs = []

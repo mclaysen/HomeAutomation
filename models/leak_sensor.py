@@ -1,18 +1,32 @@
-from enum import Enum
 import logging
-from models.battery_level import BatteryLevel
+from enum import Enum
 
+from models.battery_level import BatteryLevel
 from utilities import normalize_timestamp
 
+
 class LeakSensorEvent(Enum):
-    BUTTON_PRESS = 'Button Press'
-    WATER_LEAK = 'Water Leak'
-    BATTERY_REPORT = 'Battery Report'
-    UNKNOWN = 'Unknown'
-    INVALID = 'Invalid'
+    BUTTON_PRESS = "Button Press"
+    WATER_LEAK = "Water Leak"
+    BATTERY_REPORT = "Battery Report"
+    UNKNOWN = "Unknown"
+    INVALID = "Invalid"
+
 
 class LeakSensor:
-    def __init__(self, time: str, model: str, id: int, event: str | LeakSensorEvent, code: str, mic: str, detect_wet: int | None = None, battery_ok: float | None = None, battery_mV: int | None = None, leak_num: int | None = None) -> None:
+    def __init__(
+        self,
+        time: str,
+        model: str,
+        id: int,
+        event: str | LeakSensorEvent,
+        code: str,
+        mic: str,
+        detect_wet: int | None = None,
+        battery_ok: float | None = None,
+        battery_mV: int | None = None,
+        leak_num: int | None = None,
+    ) -> None:
         self.time = time
         self.model = model
         self.id = id
@@ -35,6 +49,7 @@ class LeakSensor:
         except ValueError as value_error:
             logging.error("Error normalizing timestamp: %s", value_error)
             raise ValueError(f"Invalid timestamp format: {value}") from value_error
+
     @property
     def event(self) -> LeakSensorEvent:
         return self._event
@@ -47,7 +62,10 @@ class LeakSensor:
             elif isinstance(value, LeakSensorEvent):
                 self._event = value
             else:
-                logging.error("Invalid type for event: %s. Expected str or LeakSensorEvent.", type(value))
+                logging.error(
+                    "Invalid type for event: %s. Expected str or LeakSensorEvent.",
+                    type(value),
+                )
                 self._event = LeakSensorEvent.INVALID
         except ValueError:
             logging.error("Unknown event type: %s", value)
@@ -76,25 +94,27 @@ class LeakSensor:
             elif value == 0:
                 self._detect_wet = False
             else:
-                logging.error("Invalid value for detect_wet: %s. Expected 0 or 1.", value)
+                logging.error(
+                    "Invalid value for detect_wet: %s. Expected 0 or 1.", value
+                )
                 self._detect_wet = None
         else:
             self._detect_wet = None
 
     @classmethod
-    def from_dict(cls, data: dict) -> 'LeakSensor':
-        required_fields = ('time', 'model', 'id', 'code', 'mic')
+    def from_dict(cls, data: dict) -> "LeakSensor":
+        required_fields = ("time", "model", "id", "code", "mic")
         missing_fields = [field for field in required_fields if field not in data]
         if missing_fields:
             message = f"Missing required field(s): {', '.join(missing_fields)}"
             logging.error("%s in data: %s", message, data)
             raise ValueError(message)
 
-        time_value = data['time']
-        model_value = data['model']
-        id_value = data['id']
-        code_value = data['code']
-        mic_value = data['mic']
+        time_value = data["time"]
+        model_value = data["model"]
+        id_value = data["id"]
+        code_value = data["code"]
+        mic_value = data["mic"]
 
         if not isinstance(time_value, str) or not time_value.strip():
             raise ValueError("Field 'time' must be a non-empty string")
@@ -111,26 +131,26 @@ class LeakSensor:
             time=time_value,
             model=model_value,
             id=id_value,
-            event=data.get('event', LeakSensorEvent.UNKNOWN),
+            event=data.get("event", LeakSensorEvent.UNKNOWN),
             code=code_value,
             mic=mic_value,
-            detect_wet=data.get('detect_wet'),
-            battery_ok=data.get('battery_ok'),
-            battery_mV=data.get('battery_mV'),
-            leak_num=data.get('leak_num')
-    )
+            detect_wet=data.get("detect_wet"),
+            battery_ok=data.get("battery_ok"),
+            battery_mV=data.get("battery_mV"),
+            leak_num=data.get("leak_num"),
+        )
 
     def to_dict(self) -> dict:
         return {
-            'time': self.time,
-            'model': self.model,
-            'id': self.id,
-            'event': self.event.value,
-            'code': self.code,
-            'mic': self.mic,
-            'detect_wet': self.detect_wet,
-            'battery_ok': self.battery_ok,
-            'battery_mV': self.battery_mV,
-            'leak_num': self.leak_num,
-            'battery_level': self.battery_level.value
+            "time": self.time,
+            "model": self.model,
+            "id": self.id,
+            "event": self.event.value,
+            "code": self.code,
+            "mic": self.mic,
+            "detect_wet": self.detect_wet,
+            "battery_ok": self.battery_ok,
+            "battery_mV": self.battery_mV,
+            "leak_num": self.leak_num,
+            "battery_level": self.battery_level.value,
         }

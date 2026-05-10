@@ -1,5 +1,7 @@
-from models.temp_sensor import TempSensor
 from assertpy import assert_that
+
+from models.temp_sensor import TempSensor
+
 
 def test_temp_sensor_data_from_dict():
     data = {
@@ -10,7 +12,7 @@ def test_temp_sensor_data_from_dict():
         "battery_ok": 1,
         "temperature_C": 22.5,
         "humidity": 45,
-        "mic": "abc123"
+        "mic": "abc123",
     }
     temp_data = TempSensor.from_dict(data)
 

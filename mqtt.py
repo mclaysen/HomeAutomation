@@ -1,22 +1,23 @@
+import configparser
 import json
+import os
 import signal
 import sys
-import configparser
-import os
+
+from discovery_handlers.publish_discovery import publish_discovery
 from log import MqttLogger
+from models.device_type import DeviceType
 from models.sensor_mappings import Config
 from mqtt_handlers.message_handlers.message_handler_factory import MessageHandlerFactory
 from mqtt_handlers.mqtt_publisher import MqttPublisher
-from mqtt_handlers.subscriber_model import SubscriberModel, SecureSubscriberModel
 from mqtt_handlers.publisher_model import PublisherModel
-from models.device_type import DeviceType
-from discovery_handlers.publish_discovery import publish_discovery
+from mqtt_handlers.subscriber_model import SecureSubscriberModel, SubscriberModel
 
 logger = MqttLogger("console_logger").getLogger()
 config = configparser.ConfigParser()
 current_dir = os.path.dirname(os.path.abspath(__file__))
-config_index = os.path.join(current_dir, 'config.ini')
-config_json = os.path.join(current_dir, 'config.json')
+config_index = os.path.join(current_dir, "config.ini")
+config_json = os.path.join(current_dir, "config.json")
 
 config.read(config_index)
 
@@ -24,15 +25,19 @@ with open(config_json) as f:
     data = json.load(f)
     appsettings = Config.from_dict(data)
 
+
 def connect_homeassistant() -> MqttPublisher:
-    username = config.get('HOMEASSISTANT', 'USER')
-    password = config.get('HOMEASSISTANT', 'PASSWORD')
+    username = config.get("HOMEASSISTANT", "USER")
+    password = config.get("HOMEASSISTANT", "PASSWORD")
     homeassistantip = appsettings.HOMEASSISTANT_IP
-    publiserData = PublisherModel(DeviceType.HOME_ASSISTANT, homeassistantip, 1883, username, password)
+    publiserData = PublisherModel(
+        DeviceType.HOME_ASSISTANT, homeassistantip, 1883, username, password
+    )
     client = MqttPublisher(publisherData=publiserData, logger=logger)
     logger.info("Connecting to Home Assistant at %s", homeassistantip)
     client.connect()
     return client
+
 
 def on_ha_status(client, userdata, message):
     status = message.payload.decode("utf-8").strip().lower()
@@ -40,24 +45,36 @@ def on_ha_status(client, userdata, message):
     if status == "online":
         publish_discovery(client, appsettings)
 
+
 homeassistantclient = connect_homeassistant()
 publish_discovery(homeassistantclient, appsettings)
 
-dtesub = SubscriberModel(DeviceType.ENERGY_METER, appsettings.DTE_IP, 2883, "event/metering/#")
-messageHandlerFactoryDte = MessageHandlerFactory(dtesub, homeassistantclient, appsettings, logger)
+dtesub = SubscriberModel(
+    DeviceType.ENERGY_METER, appsettings.DTE_IP, 2883, "event/metering/#"
+)
+messageHandlerFactoryDte = MessageHandlerFactory(
+    dtesub, homeassistantclient, appsettings, logger
+)
 
-subscriberData = SubscriberModel(DeviceType.GENERIC_RF_433, appsettings.RTL_IP, 1883, "rtl_433/+/events/#")
-messageHandlerFactoryRtl = MessageHandlerFactory(subscriberData, homeassistantclient, appsettings, logger)
+subscriberData = SubscriberModel(
+    DeviceType.GENERIC_RF_433, appsettings.RTL_IP, 1883, "rtl_433/+/events/#"
+)
+messageHandlerFactoryRtl = MessageHandlerFactory(
+    subscriberData, homeassistantclient, appsettings, logger
+)
 
 ha_status_sub = SecureSubscriberModel(
     DeviceType.HOME_ASSISTANT,
     appsettings.HOMEASSISTANT_IP,
     1883,
     "homeassistant/status",
-    username=config.get('HOMEASSISTANT', 'USER'),
-    password=config.get('HOMEASSISTANT', 'PASSWORD'),
+    username=config.get("HOMEASSISTANT", "USER"),
+    password=config.get("HOMEASSISTANT", "PASSWORD"),
 )
-haClientFactory = MessageHandlerFactory(ha_status_sub, homeassistantclient, appsettings, logger)
+haClientFactory = MessageHandlerFactory(
+    ha_status_sub, homeassistantclient, appsettings, logger
+)
+
 
 def exit_gracefully(signum, frame):
     print("exiting")
@@ -66,6 +83,7 @@ def exit_gracefully(signum, frame):
     messageHandlerFactoryRtl.close()
     haClientFactory.close()
     sys.exit(0)
+
 
 signal.signal(signal.SIGTERM, exit_gracefully)
 signal.signal(signal.SIGINT, exit_gracefully)

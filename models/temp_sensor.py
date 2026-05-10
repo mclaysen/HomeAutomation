@@ -1,7 +1,18 @@
 from utilities import normalize_timestamp
 
+
 class TempSensor:
-    def __init__(self, time: str, model: str, id: int, channel: str, battery_ok: int, temperature_C: float, humidity: int, mic: str) -> None:
+    def __init__(
+        self,
+        time: str,
+        model: str,
+        id: int,
+        channel: str,
+        battery_ok: int,
+        temperature_C: float,
+        humidity: int,
+        mic: str,
+    ) -> None:
         self.time = time
         self.model = model
         self.id = id
@@ -20,17 +31,17 @@ class TempSensor:
         self._time = normalize_timestamp(value)
 
     @classmethod
-    def from_dict(cls, data: dict) -> 'TempSensor':
+    def from_dict(cls, data: dict) -> "TempSensor":
         return cls(**data)
 
     def to_dict(self) -> dict:
         return {
-            'time': self.time,
-            'model': self.model,
-            'id': self.id,
-            'channel': self.channel,
-            'battery_ok': self.battery_ok,
-            'temperature_C': self.temperature_C,
-            'humidity': self.humidity,
-            'mic': self.mic
+            "time": self.time,
+            "model": self.model,
+            "id": self.id,
+            "channel": self.channel,
+            "battery_ok": self.battery_ok,
+            "temperature_C": self.temperature_C,
+            "humidity": self.humidity,
+            "mic": self.mic,
         }

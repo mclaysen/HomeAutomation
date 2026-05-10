@@ -2,7 +2,9 @@ from models.device_type import DeviceType
 
 
 class PublisherModel:
-    def __init__(self, deviceType: DeviceType, ip: str, port: int, username: str, password: str) -> None:
+    def __init__(
+        self, deviceType: DeviceType, ip: str, port: int, username: str, password: str
+    ) -> None:
         self.deviceType = deviceType
         self.ip = ip
         self.port = port
