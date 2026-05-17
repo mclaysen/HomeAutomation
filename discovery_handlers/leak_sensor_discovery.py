@@ -9,6 +9,12 @@ class LeakSensorDiscovery(AbstractDiscoveryHandler):
         self.sensorName = sensorName.upper()
         self.sensorId = sensorId
 
+    def getComponentTopicMap(self, defaultTopic: str) -> dict[str, str]:
+        return {
+            "leakStatus": defaultTopic + "/state/leak",
+            "buttonPressed": defaultTopic + "/event/button",
+        }
+
     def getDiscoveryPayload(self, stateTopic: str) -> dict:
         payload = {
             "dev": {
@@ -43,6 +49,5 @@ class LeakSensorDiscovery(AbstractDiscoveryHandler):
                 },
             },
             "qos": 0,
-            "state_topic": stateTopic,
         }
-        return payload
+        return self.applyComponentTopicMap(payload, stateTopic)

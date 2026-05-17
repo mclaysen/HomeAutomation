@@ -20,6 +20,22 @@ class AbstractDiscoveryHandler(ABC):
     def getDiscoveryPayload(self, stateTopic: str) -> dict:
         pass
 
+    def getComponentTopicMap(self, defaultTopic: str) -> dict[str, str]:
+        return {}
+
+    def applyComponentTopicMap(self, payload: dict, defaultTopic: str) -> dict:
+        payload["state_topic"] = defaultTopic
+        component_topic_map = self.getComponentTopicMap(defaultTopic)
+
+        if "cmps" not in payload:
+            return payload
+
+        for component_key, component_topic in component_topic_map.items():
+            if component_key in payload["cmps"]:
+                payload["cmps"][component_key]["state_topic"] = component_topic
+
+        return payload
+
     def getOriginInfo(self) -> dict:
         return {"name": "mclaysen - HomeAutomation", "sw": "1.0.0"}
 

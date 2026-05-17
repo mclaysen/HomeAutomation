@@ -36,6 +36,13 @@ class DoorSensorDiscovery(AbstractDiscoveryHandler):
                 "unique_id": self.getUniquePrefix("coverstate"),
             }
 
+    def getComponentTopicMap(self, defaultTopic: str) -> dict[str, str]:
+        return {
+            "doorStatus": defaultTopic + "/state/door",
+            "batteryStatus": defaultTopic + "/event/battery",
+            "coverStatus": defaultTopic + "/event/cover",
+        }
+
     def getDiscoveryPayload(self, stateTopic: str) -> dict:
         payload = {
             "dev": {
@@ -73,6 +80,5 @@ class DoorSensorDiscovery(AbstractDiscoveryHandler):
                 },
             },
             "qos": 0,
-            "state_topic": stateTopic,
         }
-        return payload
+        return self.applyComponentTopicMap(payload, stateTopic)
