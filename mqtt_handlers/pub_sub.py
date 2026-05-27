@@ -58,6 +58,8 @@ class PubSub(ABC):
     def disconnect(self, client: Client, userdata, rc) -> None:
         self.logger.error("Disconnecting")
         if self.client is not None:
+            # TODO: Revisit this retry loop and see if Paho's internal reconnect
+            # process can replace the custom reconnect handling here.
             self.logger.info("Stopping loop")
             self.client.loop_stop()
             self.client.disconnect()
