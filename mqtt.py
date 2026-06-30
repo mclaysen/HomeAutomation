@@ -4,6 +4,7 @@ import os
 import signal
 import sys
 
+from discovery_handlers.discovery_factory import DiscoveryFactory
 from discovery_handlers.publish_discovery import publish_discovery
 from log import MqttLogger
 from models.device_type import DeviceType
@@ -43,11 +44,11 @@ def on_ha_status(client, userdata, message):
     status = message.payload.decode("utf-8").strip().lower()
     logger.info("Home Assistant status: %s", status)
     if status == "online":
-        publish_discovery(client, appsettings)
+        publish_discovery(client, appsettings, DiscoveryFactory())
 
 
 homeassistantclient = connect_homeassistant()
-publish_discovery(homeassistantclient, appsettings)
+publish_discovery(homeassistantclient, appsettings, DiscoveryFactory())
 
 dtesub = SubscriberModel(
     DeviceType.ENERGY_METER, appsettings.DTE_IP, 2883, "event/metering/#"

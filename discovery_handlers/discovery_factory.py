@@ -8,17 +8,18 @@ from models.sensor_types import SensorType
 
 
 class DiscoveryFactory:
-    def __init__(self, sensorType: SensorType) -> None:
-        self.sensorType = sensorType
-
     def get_discovery_object(
-        self, sensorName: str, sensorId: str, sensorModel: str | None
+        self,
+        sensorType: SensorType,
+        sensorName: str,
+        sensorId: str,
+        sensorModel: str | None,
     ) -> abstract_discovery_handler.AbstractDiscoveryHandler:
-        if self.sensorType == SensorType.TEMP_SENSOR:
+        if sensorType == SensorType.TEMP_SENSOR:
             return TemperatureHumidityDiscovery(sensorName, sensorId)
-        elif self.sensorType == SensorType.DOOR_SENSOR:
+        elif sensorType == SensorType.DOOR_SENSOR:
             return DoorSensorDiscovery(sensorName, sensorId, sensorModel)
-        elif self.sensorType == SensorType.LEAK_SENSOR:
+        elif sensorType == SensorType.LEAK_SENSOR:
             return LeakSensorDiscovery(sensorName, sensorId, sensorModel)
         else:
             raise Exception("Invalid sensor type")

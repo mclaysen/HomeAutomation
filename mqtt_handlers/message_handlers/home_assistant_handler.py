@@ -1,6 +1,7 @@
 import logging
 from typing import TypeVar
 
+from discovery_handlers.discovery_factory import DiscoveryFactory
 from discovery_handlers.publish_discovery import publish_discovery
 from models.sensor_mappings import Config
 from mqtt_handlers.mqtt_publisher import MqttPublisher
@@ -26,6 +27,6 @@ class HomeAssistantMessageHandler:
         self.logger.debug(payload)
         try:
             if payload == "online":
-                publish_discovery(self.publisher, self.appSettings)
+                publish_discovery(self.publisher, self.appSettings, DiscoveryFactory())
         except Exception as e:
             self.logger.error("Error handling message: %s", e)
