@@ -20,6 +20,6 @@ class DiscoveryFactory:
         elif sensorType == SensorType.DOOR_SENSOR:
             return DoorSensorDiscovery(sensorName, sensorId, sensorModel)
         elif sensorType == SensorType.LEAK_SENSOR:
-            return LeakSensorDiscovery(sensorName, sensorId, sensorModel)
+            return LeakSensorDiscovery(sensorName, sensorId)
         else:
             raise Exception("Invalid sensor type")

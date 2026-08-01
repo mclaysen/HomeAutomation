@@ -73,7 +73,7 @@ class LeakSensorHandler:
                 if payload.event == LeakSensorEvent.BATTERY_REPORT:
                     report_payload = self._get_battery_report_payload(payload)
                     self.publisher.publish(
-                        f"{topic_prefix}/battery_report",
+                        f"{topic_prefix}/state/battery",
                         json.dumps(report_payload),
                         0,
                         False,
@@ -81,7 +81,7 @@ class LeakSensorHandler:
                 elif payload.event == LeakSensorEvent.WATER_LEAK:
                     leak_payload = self._get_leak_report_payload(payload)
                     self.publisher.publish(
-                        f"{topic_prefix}/leak_report",
+                        f"{topic_prefix}/state/leak",
                         json.dumps(leak_payload),
                         0,
                         False,
@@ -90,13 +90,13 @@ class LeakSensorHandler:
                     click_payload = self._get_button_click_report_payload(payload)
                     leak_payload = self._get_leak_report_payload(payload)
                     self.publisher.publish(
-                        f"{topic_prefix}/leak_report",
+                        f"{topic_prefix}/state/leak",
                         json.dumps(leak_payload),
                         0,
                         False,
                     )
                     self.publisher.publish(
-                        f"{topic_prefix}/button_click_report",
+                        f"{topic_prefix}/event/button",
                         json.dumps(click_payload),
                         0,
                         False,

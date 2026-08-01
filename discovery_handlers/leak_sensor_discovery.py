@@ -43,9 +43,15 @@ class LeakSensorDiscovery(AbstractDiscoveryHandler):
                 },
                 "buttonPressed": {
                     "p": "event",
-                    "device_class": "button",
                     "name": self.sensorName + " Button Pressed",
                     "unique_id": self.getUniquePrefix("buttonpressed"),
+                    "event_types": ["Button Press"],
+                    "value_template": (
+                        '{"event_type": "{{ value_json.event }}", '
+                        '"id": {{ value_json.id }}, '
+                        '"model": "{{ value_json.model }}", '
+                        '"time": "{{ value_json.time }}"}'
+                    ),
                 },
             },
             "qos": 0,

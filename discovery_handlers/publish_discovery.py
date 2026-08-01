@@ -23,6 +23,16 @@ def publish_discovery(
                     "rtl_433/" + sensor.name
                 )
                 client.publish(discovery_topic, json.dumps(discovery_payload), 1, True)
+        elif modelMapping.sensorType == SensorType.LEAK_SENSOR:
+            for sensor in modelMapping.sensors:
+                discovery_object = discovery_factory.get_discovery_object(
+                    SensorType.LEAK_SENSOR, sensor.name, str(sensor.id), None
+                )
+                discovery_topic = discovery_object.topic_for_discovery()
+                discovery_payload = discovery_object.getDiscoveryPayload(
+                    "rtl_433/leak_sensor/" + sensor.name
+                )
+                client.publish(discovery_topic, json.dumps(discovery_payload), 1, True)
         elif modelMapping.sensorType == SensorType.DOOR_SENSOR:
             for sensor in modelMapping.sensors:
                 discovery_object = discovery_factory.get_discovery_object(
