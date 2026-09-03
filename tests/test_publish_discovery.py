@@ -104,7 +104,7 @@ def test_publish_discovery_skips_unknown_sensor_type():
         [
             ModelMapping(
                 model="unknown",
-                sensorType=SensorType.LEAK_SENSOR,
+                sensorType=0,
                 sensors=[SensorMapping(name="basement", id=303)],
             )
         ]
