@@ -70,6 +70,12 @@ class LeakSensorHandler:
             )
             if sensor is not None:
                 topic_prefix = f"rtl_433/leak_sensor/{sensor.name}"
+                self.publisher.publish(
+                    topic_prefix,
+                    json.dumps({"time": payload.time}),
+                    0,
+                    False,
+                )
                 if payload.event == LeakSensorEvent.BATTERY_REPORT:
                     report_payload = self._get_battery_report_payload(payload)
                     self.publisher.publish(
