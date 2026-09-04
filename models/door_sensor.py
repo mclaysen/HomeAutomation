@@ -1,8 +1,8 @@
 class DoorSensor:
     def __init__(self, time: str, model: str, id: int, cmd: int, tristate: str) -> None:
         self.time = time
-        self.model = model
-        self.house_code = id
+        self.model = "Custom-Door-Sensor" if id == 30409 else model
+        self.id = id
         self.command = cmd
         self.tri_state = tristate
 
@@ -16,7 +16,7 @@ class DoorSensor:
         return {
             "time": self.time,
             "model": self.model,
-            "id": self.house_code,
+            "id": self.id,
             "cmd": self.command,
             "tristate": self.tri_state,
         }
