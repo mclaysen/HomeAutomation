@@ -1,28 +1,36 @@
-from abc import ABC, abstractmethod
-from paho.mqtt.client import Client
-import uuid
 import logging
 import logging.config
 import time
+import uuid
+from abc import ABC, abstractmethod
+
+from paho.mqtt.client import Client
+
+from models.device_type import DeviceType
 
 
 class PubSub(ABC):
-    def __init__(self, callback, topic : str , logger: logging.Logger):
+    def __init__(
+        self, deviceType: DeviceType, topic: str | None, logger: logging.Logger
+    ):
         self.client = None
         self.clientId = str(uuid.uuid4())
+        self.deviceType = deviceType
         self.topic = topic
         self.logger = logger
-        self.callback = callback
+        self.callback = None
 
     @abstractmethod
     def connect(self) -> None:
         self.logger.info("test")
-    
+
+    def _setCallback(self, callback) -> None:
+        self.callback = callback
 
     def publish(self, topic, payload, qos, retain) -> None:
-        if(self.client is None):
+        if self.client is None:
             raise Exception("MQTT client is null")
-        
+
         self.client.publish(topic, payload, qos, retain)
 
     def _startSubscriber(self, ip: str, port: int) -> None:
@@ -39,18 +47,19 @@ class PubSub(ABC):
         else:
             self.logger.error("Client is not connected")
 
-
-    def on_connect(self, client : Client, userdata, flags, rc):
-        print("Connected with result code "+str(rc))
+    def on_connect(self, client: Client, userdata, flags, rc):
+        print("Connected with result code " + str(rc))
 
         # Subscribing in on_connect() means that if we lose the connection and
         # reconnect then subscriptions will be renewed.
-        if(self.topic is not None):
+        if self.topic is not None:
             client.subscribe(self.topic)
-    
-    def disconnect(self, client : Client, userdata, rc) -> None:
-        self.logger.warn("Disconnecting")
+
+    def disconnect(self, client: Client, userdata, rc) -> None:
+        self.logger.error("Disconnecting")
         if self.client is not None:
+            # TODO: Revisit this retry loop and see if Paho's internal reconnect
+            # process can replace the custom reconnect handling here.
             self.logger.info("Stopping loop")
             self.client.loop_stop()
             self.client.disconnect()
@@ -64,8 +73,8 @@ class PubSub(ABC):
                     break
                 except Exception as e:
                     self.logger.error("Error reconnecting. Exception: %s", e)
-    
-    def quit(self) -> None: 
+
+    def quit(self) -> None:
         if self.client is not None:
             self.client.loop_stop()
             self.client.disconnect()

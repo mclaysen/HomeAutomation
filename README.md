@@ -5,6 +5,7 @@ Basic Home Automation services for receiving sensor data and publishing/handling
 ## Overview
 
 This repository contains scripts and modules for:
+
 - Reading sensor data (including rtl_433-based inputs)
 - Mapping sensor payloads into internal models
 - Publishing and subscribing to MQTT topics
@@ -81,3 +82,12 @@ rtl_433 -f 433950000 -F mqtt://localhost:1883 -vv
 - Ensure `/home/pi/startup/rtl433.sh` and `/home/pi/startup/mqtt.sh` are executable.
 - Confirm Python dependencies and runtime environment are installed for your target device.
 - Review log files in `/var/log/` for troubleshooting.
+
+## TODO
+
+- [ ] Add leak sensor discovery publishing in `discovery_handlers/publish_discovery.py`.
+- [ ] Fix the leak sensor factory path in `discovery_handlers/discovery_factory.py` so it matches the `LeakSensorDiscovery` constructor.
+- [ ] Add tests for discovery publishing, Home Assistant rediscovery, leak sensor handling, and message routing.
+- [ ] Document the local setup flow for a fresh environment, including virtualenv creation and dependency installation.
+- [ ] Update the project layout section so it reflects the current repository structure.
+- [ ] Review and harden MQTT reconnect behavior in `mqtt_handlers/pub_sub.py`.

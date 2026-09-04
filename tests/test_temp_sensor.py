@@ -1,5 +1,7 @@
-from models.temp_sensor import TempSensorData
 from assertpy import assert_that
+
+from models.temp_sensor import TempSensor
+
 
 def test_temp_sensor_data_from_dict():
     data = {
@@ -10,9 +12,9 @@ def test_temp_sensor_data_from_dict():
         "battery_ok": 1,
         "temperature_C": 22.5,
         "humidity": 45,
-        "mic": "abc123"
+        "mic": "abc123",
     }
-    temp_data = TempSensorData.from_dict(data)
+    temp_data = TempSensor.from_dict(data)
 
     assert_that(temp_data.time).is_equal_to("2026-01-15T10:30:00-05:00")
     assert_that(temp_data.model).is_equal_to("TempSensorX")
